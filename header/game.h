@@ -10,7 +10,7 @@
 // Constantes pour la taille de la fenêtre
 #define WINDOW_WIDTH 960  // Remplacez par la largeur souhaitée
 #define WINDOW_HEIGHT 640 // Remplacez par la hauteur souhaitée
-#define TILE_SIZE 64
+#define TILE_SIZE 32
 
 // Constantes pour la grille du fond d'écran
 #define GRID_ROWS (WINDOW_HEIGHT / TILE_SIZE)

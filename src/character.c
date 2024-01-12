@@ -118,20 +118,20 @@ void characterMovement(Character *character) {
         else if (event.type == SDL_KEYDOWN) {
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
-                    if (character->x <= 5) break;
-                    character->x -= 5;
+                    if (character->x <= TILE_SIZE) break;
+                    character->x -= TILE_SIZE;
                     break;
                 case SDLK_RIGHT:
-                    if (character->x + CHARACTER_WIDTH >= WINDOW_WIDTH) break;
-                    character->x += 5;
+                    if (character->x + TILE_SIZE >= WINDOW_WIDTH) break;
+                    character->x += TILE_SIZE;
                     break;
                 case SDLK_UP:
-                    if (character->y <= 5) break;
-                    character->y -= 5;
+                    if (character->y < TILE_SIZE) break;
+                    character->y -= TILE_SIZE;
                     break;
                 case SDLK_DOWN:
-                    if (character->y + CHARACTER_HEIGHT >= WINDOW_HEIGHT) break;
-                    character->y += 5;
+                    if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
+                    character->y += TILE_SIZE;
                     break;
             }
         }
