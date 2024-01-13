@@ -118,7 +118,7 @@ void characterMovement(Character *character) {
         else if (event.type == SDL_KEYDOWN) {
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
-                    if (character->x <= TILE_SIZE) break;
+                    if (character->x < TILE_SIZE) break;
                     character->x -= TILE_SIZE;
                     break;
                 case SDLK_RIGHT:
