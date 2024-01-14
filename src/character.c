@@ -17,12 +17,8 @@ void initCharacter(Character *character, const char *filePath, SDL_Renderer *ren
         character->spritePaths[i] = NULL; // Initialiser toutes les entrées à NULL
     }
 
-    if (filePath && filePath[0] != '\0') {
-        addSprite(character, filePath);
-    } else {
-        // Chemin par défaut si filePath est vide
-        addSprite(character, "assets/characters/main_character/default_idle_1.png");
-    }
+    if (filePath && filePath[0] != '\0') { addSprite(character, filePath); } 
+    else { addSprite(character, "assets/characters/main_character/default_idle_1.png"); }
 
     initCharacterTexture(character);
 }
@@ -67,30 +63,18 @@ void initCharacterTexture(Character *character) {
     }
 }
 
-
 // Ajouter un sprite au tableau de chemins de fichiers
 void addSprite(Character *character, const char *spritePath) {
     int index = character->currentSpriteIndex;
     
-    if (index < MAX_SPRITES) {
-        character->spritePaths[index] = spritePath;
-    } else {
-        // Gérer l'erreur si le tableau est plein (à adapter selon vos besoins)
-        fprintf(stderr, "Impossible d'ajouter plus de sprites. Tableau plein.\n");
-    }
+    if (index < MAX_SPRITES)    { character->spritePaths[index] = spritePath; } 
+    else                        { fprintf(stderr, "Impossible d'ajouter plus de sprites. Tableau plein.\n"); }
 }
-
-
-
 
 // Changer le sprite actuel en utilisant l'indice fourni
 void changeCurrentSprite(Character *character, int index) {
-    if (index >= 0 && index < MAX_SPRITES) {
-        character->currentSpriteIndex = index;
-    } else {
-        // Gérer l'erreur si l'indice est invalide (à adapter selon vos besoins)
-        fprintf(stderr, "Indice de sprite invalide.\n");
-    }
+    if (index >= 0 && index < MAX_SPRITES)  { character->currentSpriteIndex = index; } 
+    else                                    { fprintf(stderr, "Indice de sprite invalide.\n"); }
 }
 
 // Modifier les statistiques du personnage
@@ -116,6 +100,7 @@ void characterMovement(Character *character) {
             exit(0);
         }
         else if (event.type == SDL_KEYDOWN) {
+
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
                     if (character->x < TILE_SIZE) break;
@@ -132,6 +117,7 @@ void characterMovement(Character *character) {
                 case SDLK_DOWN:
                     if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
                     character->y += TILE_SIZE;
+    
                     break;
             }
         }

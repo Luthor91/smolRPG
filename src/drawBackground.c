@@ -15,7 +15,6 @@ void fillBackgroundTextures(SDL_Renderer *renderer, SDL_Texture *texture, SDL_Te
     for (int i = 0; i < GRID_ROWS; ++i) {
         for (int j = 0; j < GRID_COLS; ++j) {
             backgroundTextures[i][j] = texture;
-            // Assurez-vous que la texture a été correctement créée avant l'appel de cette fonction
         }
     }
 }

@@ -45,13 +45,69 @@ void initGame() {
     initCharacter(&character, "assets/characters/main_character/default_idle_1.png", renderer);
 }
 
+void drawFPS(float fps, SDL_Renderer *renderer, TTF_Font *font) {
+    SDL_Color textColor = {255, 0, 0}; // Couleur du texte (rouge ici)
+    char fpsText[20]; // Chaîne pour stocker le texte des FPS
+
+    // Formatez le texte des FPS
+    snprintf(fpsText, sizeof(fpsText), "FPS: %.2f", fps);
+
+    // Utilisez votre fonction de rendu de texte pour afficher le texte à l'écran
+    renderText(fpsText, WINDOW_WIDTH - 100, 10, renderer, font, textColor);
+}
+
+void renderText(const char *text, int x, int y, SDL_Renderer *renderer, TTF_Font *font, SDL_Color color) {
+    SDL_Surface *surface;
+    SDL_Texture *texture;
+    
+    surface = TTF_RenderText_Solid(font, text, color);
+    if (!surface) {
+        fprintf(stderr, "Erreur lors de la création de la surface du texte : %s\n", TTF_GetError());
+        return;
+    }
+
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!texture) {
+        fprintf(stderr, "Erreur lors de la création de la texture du texte : %s\n", SDL_GetError());
+        SDL_FreeSurface(surface);
+        return;
+    }
+
+    SDL_Rect dstRect = {x, y, surface->w, surface->h};
+
+    SDL_RenderCopy(renderer, texture, NULL, &dstRect);
+
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+}
+
 void mainLoop() {
     while (1) {
+        Uint32 startTime = SDL_GetTicks(); // Enregistrez le temps de début de la boucle
+
         handleEvents();
-        draw();
+
+        SDL_RenderClear(renderer);  // Effacez le rendu au début de chaque itération
+
+        drawBackground(renderer, backgroundTextures);
+        draw();  // Assurez-vous de dessiner le personnage à chaque itération
+
+        SDL_RenderPresent(renderer);  // Mettez à jour l'écran une seule fois à la fin de chaque itération
+
+        Uint32 endTime = SDL_GetTicks(); // Enregistrez le temps de fin de la boucle
+        float frameTime = endTime - startTime;
+        float framesPerSecond = 0.0;
+
+        if (frameTime > 0) { 
+            framesPerSecond = 1000.0f / frameTime; 
+        } else { 
+            framesPerSecond = 0.0f; 
+        }
+
         SDL_Delay(16); // Ajoute une légère pause pour contrôler la vitesse du jeu
     }
 }
+
 
 void draw() {
     // Dessiner le sol
@@ -60,8 +116,11 @@ void draw() {
     // Dessiner le personnage
     SDL_Rect characterRect = {character.x, character.y, character.width, character.height};
     SDL_RenderCopy(renderer, character.characterTexture[character.currentSpriteIndex], NULL, &characterRect);
-    SDL_RenderPresent(renderer);
+    
+    // Retirez l'appel à SDL_RenderPresent ici
 }
+
+
 
 void handleEvents() {
     characterMovement(&character);
@@ -70,7 +129,7 @@ void handleEvents() {
 void freeResources() {
     if (backgroundTexture) {
         SDL_DestroyTexture(backgroundTexture);
-        backgroundTexture = NULL;  // Remettre à NULL après la destruction pour éviter les erreurs éventuelles
+        backgroundTexture = NULL;
     }
 
     if (renderer) {
