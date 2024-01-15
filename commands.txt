@@ -1,7 +1,8 @@
+INSTALL DEPENDENCIES : 
 sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-iostream-dev
 sudo apt-get install libc6-dev
 
-
+COMPILATION : 
 sudo gcc -o main ./src/main.c -I /usr/lib/x86_64-linux-gnu/libSDL2 -I /usr/lib/x86_64-linux-gnu/libSDL2_image -L /usr/lib/x86_64-linux-gnu/libSDL2 -lSDL2 -lSDL2_image && sudo chmod 777 ./main && ./main
 
 sudo gcc -o main ./src/main.c ./src/game.c ./src/character.c ./src/enemy.c ./src/drawBackground.c  ./src/functions -I ./header -I /usr/include/SDL2 -I /usr/include/SDL2_image -L /usr/lib/x86_64-linux-gnu -lSDL2 -lSDL2_image -lSDL2_ttf && sudo chmod 777 ./main && ./main
@@ -14,5 +15,8 @@ sudo gcc -o main ./src/main.c ./src/game.c ./src/character.c ./src/spell.c ./src
 
 sudo gcc -o main ./src/main.c ./src/game.c ./src/character.c ./src/characterMovement.c  ./src/spell.c ./src/fight.c ./src/drawBackground.c  ./src/functions.c -I ./header -I /usr/include/SDL2 -I /usr/include/SDL2_image -L /usr/lib/x86_64-linux-gnu -lSDL2 -lSDL2_image && sudo chmod 777 ./main && ./main
 
+CHECKING : 
+sudo gcc -Wall -Wextra -pedantic -std=c11 -o main ./src/main.c ./src/game.c ./src/character.c ./src/characterMovement.c ./src/spell.c ./src/fight.c ./src/drawBackground.c ./src/functions.c -I ./header -I /usr/include/SDL2 -I /usr/include/SDL2_image -L /usr/lib/x86_64-linux-gnu -lSDL2 -lSDL2_image
 
+PUSH GIT : 
 git add . && git commit -m "Tentative de fix" && git push
