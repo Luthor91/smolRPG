@@ -63,7 +63,7 @@ void modifyCharacterArchetype(Character *character, int archetype);
 // Obtenir le personnage
 Character getCharacter();
 int getCharacterPositionX(Character *character);
-int getCharacterPositionX(Character *character);
+int getCharacterPositionY(Character *character);
 // Ajouter un sprite au tableau de chemins de fichiers
 void addCharacterSprite(Character *character, const char *spritePath);
 
