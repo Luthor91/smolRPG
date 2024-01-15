@@ -17,6 +17,7 @@ int main() {
     initGame();
     
     signal(SIGINT, handleSignal);
+    
     mainLoop();
 
     freeResources();

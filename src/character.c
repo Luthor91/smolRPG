@@ -1,37 +1,11 @@
+#include "../header/functions.h"
 #include "../header/character.h"
+#include "../header/characterMovement.h"
 #include "../header/game.h"
+#include "../header/fight.h"
+#include <stdio.h>
 
 // character.c
-void initCharacter(Character *character, const char *filePath, SDL_Renderer *renderer) {
-    // Utilisez la structure Character pour initialiser les membres
-    character->vitality = 100;
-    character->strength = 10;
-    character->defense = 5;
-    character->x = 0;
-    character->y = 0;
-    character->width = 32;
-    character->height = 32;
-    character->renderer = renderer;  // Enregistrer le renderer
-
-    for (int i = 0; i < MAX_SPRITES; i++) {
-        character->spritePaths[i] = NULL; // Initialiser toutes les entrées à NULL
-    }
-
-    if (filePath && filePath[0] != '\0') { addSprite(character, filePath); } 
-    else { addSprite(character, "assets/characters/main_character/default_idle_1.png"); }
-
-    initCharacterTexture(character);
-}
-
-void modifyCharacterSize(Character *character, int width, int height) {
-    character->width = width;
-    character->height = height;
-}
-
-void modifyCharacterPosition(Character *character, int x, int y) {
-    character->x = x;
-    character->y = y;
-}
 
 void initCharacterTexture(Character *character) {
     if (!character->renderer) {
@@ -63,8 +37,84 @@ void initCharacterTexture(Character *character) {
     }
 }
 
+void initCharacterStats(Character *character, int vitality, int strength, int defense) {
+    character->vitality = vitality;
+    character->strength = strength;
+    character->defense = defense;
+}
+
+void initCharacterSize(Character *character, int width, int height) {
+    character->width = width;
+    character->height = height;
+}
+
+void initCharacterPosition(Character *character, int posx, int posy) {
+    character->x = posx;
+    character->y = posy;
+}
+
+void initCharacterArchetype(Character *character, int archetype) {
+    character->archetype = archetype;
+}
+
+void initCharacter(Character *character, const char *filePath, SDL_Renderer *renderer, int archetype) {
+    initCharacterPosition(character, 0, 0);
+    initCharacterSize(character, 32, 32);
+    initCharacterStats(character, 100, 10, 5);
+    initCharacterArchetype(character, archetype);
+
+    character->renderer = renderer;
+
+    for (int i = 0; i < MAX_SPRITES; i++) {
+        character->spritePaths[i] = NULL;
+    }
+
+    if (filePath && filePath[0] != '\0') { addCharacterSprite(character, filePath); } 
+    else { addCharacterSprite(character, "assets/characters/main_character/default_idle_1.png"); }
+
+    initCharacterTexture(character);
+}
+
+void modifyCharacterSize(Character *character, int width, int height) {
+    character->width = width;
+    character->height = height;
+}
+
+void modifyCharacterPosition(Character *character, int x, int y) {
+    character->x = x;
+    character->y = y;
+}
+
+void modifyCharacterVitality(Character *character, int vitality) {
+    character->vitality = vitality;
+}
+
+void modifyCharacterStrength(Character *character, int strength) {
+    character->strength = strength;
+}
+
+void modifyCharacterDefense(Character *character, int defense) {
+    character->defense = defense;
+}
+
+void modifyCharacterArchetype(Character *character, int archetype) {
+    character->archetype = archetype;
+}
+
+Character getCharacter() {
+    return character;
+}
+
+int getCharacterPositionX(Character *character) {
+    return character->x;
+}
+
+int getCharacterPositionY(Character *character) {
+    return character->y;
+}
+
 // Ajouter un sprite au tableau de chemins de fichiers
-void addSprite(Character *character, const char *spritePath) {
+void addCharacterSprite(Character *character, const char *spritePath) {
     int index = character->currentSpriteIndex;
     
     if (index < MAX_SPRITES)    { character->spritePaths[index] = spritePath; } 
@@ -72,65 +122,16 @@ void addSprite(Character *character, const char *spritePath) {
 }
 
 // Changer le sprite actuel en utilisant l'indice fourni
-void changeCurrentSprite(Character *character, int index) {
+void changeCharacterCurrentSprite(Character *character, int index) {
     if (index >= 0 && index < MAX_SPRITES)  { character->currentSpriteIndex = index; } 
     else                                    { fprintf(stderr, "Indice de sprite invalide.\n"); }
-}
-
-// Modifier les statistiques du personnage
-void modifyVitality(Character *character, int vitality) {
-    character->vitality = vitality;
-}
-
-// Modifier les statistiques du personnage
-void modifyStrength(Character *character, int strength) {
-    character->strength = strength;
-}
-
-// Modifier les statistiques du personnage
-void modifyDefense(Character *character, int defense) {
-    character->defense = defense;
-}
-
-void characterMovement(Character *character) {
-    SDL_Event event;
-
-    while (SDL_PollEvent(&event) != 0) {
-        if (event.type == SDL_QUIT) {
-            exit(0);
-        }
-        else if (event.type == SDL_KEYDOWN) {
-
-            switch (event.key.keysym.sym) {
-                case SDLK_LEFT:
-                    if (character->x < TILE_SIZE) break;
-                    character->x -= TILE_SIZE;
-                    break;
-                case SDLK_RIGHT:
-                    if (character->x + TILE_SIZE >= WINDOW_WIDTH) break;
-                    character->x += TILE_SIZE;
-                    break;
-                case SDLK_UP:
-                    if (character->y < TILE_SIZE) break;
-                    character->y -= TILE_SIZE;
-                    break;
-                case SDLK_DOWN:
-                    if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
-                    character->y += TILE_SIZE;
-    
-                    break;
-            }
-        }
-    }
 }
 
 void destroyCharacter(Character *character) {
     SDL_DestroyTexture(character->characterTexture[character->currentSpriteIndex]);
 }
 
-
-
-void printStats(Character *character) {
+void printCharacterStats(Character *character) {
     /* */
 }
 

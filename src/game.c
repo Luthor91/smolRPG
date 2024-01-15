@@ -3,6 +3,11 @@
 #include "../header/drawBackground.h"
 
 Character character;
+Character enemy;
+Character enemy0;
+Character enemy1;
+Character enemy2;
+Character enemy3;
 SDL_Texture *backgroundTexture;
 SDL_Rect backgroundRect;
 SDL_Window *window;
@@ -16,6 +21,27 @@ void initSDL() {
     SDL_DestroyWindow(window);
     IMG_Quit();
     SDL_Quit();
+}
+
+void spawnEnemy() {
+    initCharacter(&enemy, "assets/ennemies/enemy_blue.png", renderer, 1);
+
+    // Lazy
+    initCharacter(&enemy0, "assets/ennemies/enemy_red.png", renderer, 1);
+    initCharacterPosition(&enemy0, 64, 64);
+
+    // Border
+    initCharacter(&enemy1, "assets/ennemies/enemy_white.png", renderer, 2);
+    initCharacterPosition(&enemy1, 128, 128);
+
+    // Fugitive
+    initCharacter(&enemy2, "assets/ennemies/enemy_pink.png", renderer, 3);
+    initCharacterPosition(&enemy2, 256, 256);
+
+    // Fighter
+    initCharacter(&enemy3, "assets/ennemies/enemy_yellow.png", renderer, 4);
+    initCharacterPosition(&enemy3, 512, 512);
+
 }
 
 void initGame() {
@@ -33,97 +59,86 @@ void initGame() {
         exit(EXIT_FAILURE);
     }
 
-    initBackground(&backgroundRect);  // Appel à la fonction initBackground
-
     SDL_Texture *groundTexture = IMG_LoadTexture(renderer, "assets/materials/background/grass_1.png");
     if (!groundTexture) {
         fprintf(stderr, "Erreur lors du chargement de la texture du sol : %s\n", IMG_GetError());
     }
 
+    initBackground(&backgroundRect);
+
     fillBackgroundTextures(renderer, groundTexture, backgroundTextures);
 
-    initCharacter(&character, "assets/characters/main_character/default_idle_1.png", renderer);
+    initCharacter(&character, "assets/characters/main_character/default_idle_1.png", renderer, 0);
+    spawnEnemy();
+    drawGame();
+
 }
 
-void drawFPS(float fps, SDL_Renderer *renderer, TTF_Font *font) {
-    SDL_Color textColor = {255, 0, 0}; // Couleur du texte (rouge ici)
-    char fpsText[20]; // Chaîne pour stocker le texte des FPS
-
-    // Formatez le texte des FPS
-    snprintf(fpsText, sizeof(fpsText), "FPS: %.2f", fps);
-
-    // Utilisez votre fonction de rendu de texte pour afficher le texte à l'écran
-    renderText(fpsText, WINDOW_WIDTH - 100, 10, renderer, font, textColor);
-}
-
-void renderText(const char *text, int x, int y, SDL_Renderer *renderer, TTF_Font *font, SDL_Color color) {
-    SDL_Surface *surface;
-    SDL_Texture *texture;
-    
-    surface = TTF_RenderText_Solid(font, text, color);
-    if (!surface) {
-        fprintf(stderr, "Erreur lors de la création de la surface du texte : %s\n", TTF_GetError());
-        return;
+void handleMovements() {
+    int isMoved = manualMovement(&character);
+    if (isMoved == 1) { 
+        //enemyMovement(&enemy); 
+        characterMovement(&enemy0); 
+        characterMovement(&enemy1); 
+        characterMovement(&enemy2); 
+        characterMovement(&enemy3); 
+        drawGame();
     }
-
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!texture) {
-        fprintf(stderr, "Erreur lors de la création de la texture du texte : %s\n", SDL_GetError());
-        SDL_FreeSurface(surface);
-        return;
-    }
-
-    SDL_Rect dstRect = {x, y, surface->w, surface->h};
-
-    SDL_RenderCopy(renderer, texture, NULL, &dstRect);
-
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(surface);
 }
 
 void mainLoop() {
     while (1) {
-        Uint32 startTime = SDL_GetTicks(); // Enregistrez le temps de début de la boucle
 
         handleEvents();
+        handleMovements();
 
-        SDL_RenderClear(renderer);  // Effacez le rendu au début de chaque itération
+        SDL_Delay(20);
 
-        drawBackground(renderer, backgroundTextures);
-        draw();  // Assurez-vous de dessiner le personnage à chaque itération
-
-        SDL_RenderPresent(renderer);  // Mettez à jour l'écran une seule fois à la fin de chaque itération
-
-        Uint32 endTime = SDL_GetTicks(); // Enregistrez le temps de fin de la boucle
-        float frameTime = endTime - startTime;
-        float framesPerSecond = 0.0;
-
-        if (frameTime > 0) { 
-            framesPerSecond = 1000.0f / frameTime; 
-        } else { 
-            framesPerSecond = 0.0f; 
-        }
-
-        SDL_Delay(16); // Ajoute une légère pause pour contrôler la vitesse du jeu
     }
 }
 
+void renderEnemy(SDL_Renderer *renderer) {
+    SDL_Rect enemyRect;
 
-void draw() {
-    // Dessiner le sol
-    drawBackground(renderer, backgroundTextures);
+    // Render enemy
+    enemyRect = (SDL_Rect){enemy.x, enemy.y, enemy.width, enemy.height};
+    SDL_RenderCopy(renderer, enemy.characterTexture[enemy.currentSpriteIndex], NULL, &enemyRect);
 
-    // Dessiner le personnage
-    SDL_Rect characterRect = {character.x, character.y, character.width, character.height};
-    SDL_RenderCopy(renderer, character.characterTexture[character.currentSpriteIndex], NULL, &characterRect);
-    
-    // Retirez l'appel à SDL_RenderPresent ici
+    // Render enemy0
+    enemyRect = (SDL_Rect){enemy0.x, enemy0.y, enemy0.width, enemy0.height};
+    SDL_RenderCopy(renderer, enemy0.characterTexture[enemy0.currentSpriteIndex], NULL, &enemyRect);
+
+    // Render enemy1
+    enemyRect = (SDL_Rect){enemy1.x, enemy1.y, enemy1.width, enemy1.height};
+    SDL_RenderCopy(renderer, enemy1.characterTexture[enemy1.currentSpriteIndex], NULL, &enemyRect);
+
+    // Render enemy2
+    enemyRect = (SDL_Rect){enemy2.x, enemy2.y, enemy2.width, enemy2.height};
+    SDL_RenderCopy(renderer, enemy2.characterTexture[enemy2.currentSpriteIndex], NULL, &enemyRect);
+
+    // Render enemy3
+    enemyRect = (SDL_Rect){enemy3.x, enemy3.y, enemy3.width, enemy3.height};
+    SDL_RenderCopy(renderer, enemy3.characterTexture[enemy3.currentSpriteIndex], NULL, &enemyRect);
 }
 
 
+void drawGame() {
+
+    SDL_RenderClear(renderer);  // Effacez le rendu au début de chaque itération
+
+    drawBackground(renderer, backgroundTextures);
+
+    SDL_Rect characterRect = {character.x, character.y, character.width, character.height};
+    SDL_RenderCopy(renderer, character.characterTexture[character.currentSpriteIndex], NULL, &characterRect);
+
+    renderEnemy(renderer);
+
+    SDL_RenderPresent(renderer);  // Mettez à jour l'écran une seule fois à la fin de chaque itération
+    
+}
 
 void handleEvents() {
-    characterMovement(&character);
+    //
 }
 
 void freeResources() {
@@ -145,5 +160,4 @@ void freeResources() {
     IMG_Quit();
     SDL_Quit();
 }
-
 

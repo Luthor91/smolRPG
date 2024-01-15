@@ -9,41 +9,92 @@
 #define CHARACTER_HEIGHT 32
 #define CHARACTER_WIDTH 32
 
-// Déclaration de la structure Character
 typedef struct {
+    SDL_Renderer *renderer;
+    SDL_Texture *characterTexture[MAX_SPRITES];
+    const char *spritePaths[MAX_SPRITES];
+    int currentSpriteIndex;
+    int width;
+    int height;
+    int x;
+    int y;
     int vitality;
     int strength;
     int defense;
-    int x;
-    int y;
-    int width;
-    int height;
-
-    const char *spritePaths[MAX_SPRITES];
-    SDL_Texture *characterTexture[MAX_SPRITES];
-    int currentSpriteIndex;
-    SDL_Renderer *renderer;  // Ajouter cette ligne
+    int archetype;
 } Character;
 
-
-// Fonctions pour initialiser et gérer le personnage
-void initCharacter(Character *character, const char *filePath, SDL_Renderer *renderer) ;
+// Initialiser la texture du personnage
 void initCharacterTexture(Character *character);
-void addSprite(Character *character, const char *spritePath);
-void changeCurrentSprite(Character *character, int index);
+
+// Initialiser les statistiques du personnage
+void initCharacterStats(Character *character, int vitality, int strength, int defense);
+
+// Initialiser la taille du personnage
+void initCharacterSize(Character *character, int width, int height);
+
+// Initialiser la position du personnage
+void initCharacterPosition(Character *character, int posx, int posy);
+
+// Initialiser l'archétype du personnage
+void initCharacterArchetype(Character *character, int archetype);
+
+// Initialiser le personnage avec des valeurs par défaut
+void initCharacter(Character *character, const char *filePath, SDL_Renderer *renderer, int archetype);
+
+// Modifier la taille du personnage
+void modifyCharacterCharacterSize(Character *character, int width, int height);
+
+// Modifier la position du personnage
+void modifyCharacterCharacterPosition(Character *character, int x, int y);
+
+// Modifier la vitalité du personnage
+void modifyCharacterVitality(Character *character, int vitality);
+
+// Modifier la force du personnage
+void modifyCharacterStrength(Character *character, int strength);
+
+// Modifier la défense du personnage
+void modifyCharacterDefense(Character *character, int defense);
+
+// Modifier l'archétype du personnage
+void modifyCharacterArchetype(Character *character, int archetype);
+
+// Obtenir le personnage
+Character getCharacter();
+int getCharacterPositionX(Character *character);
+int getCharacterPositionX(Character *character);
+// Ajouter un sprite au tableau de chemins de fichiers
+void addCharacterSprite(Character *character, const char *spritePath);
+
+// Changer le sprite actuel en utilisant l'indice fourni
+void changeCharacterCurrentSprite(Character *character, int index);
+
+// Mouvement aléatoire du personnage
+void characterMovementRandom(Character *character);
+
+// Mouvement du personnage en restant près du bord
+void characterMovementBorder(Character *character);
+
+// Mouvement du personnage pour fuir
+void characterMovementFugitive(Character *character);
+
+// Mouvement du personnage comme un combattant
+void characterMovementFighter(Character *character);
+
+// Mouvement paresseux du personnage
+void characterMovementLazy(Character *character);
+
+// Mouvement manuel du personnage
+int manualMovement(Character *character);
+
+// Mouvement général du personnage
+void characterMovement(Character *character);
+
+// Détruire la texture du personnage
 void destroyCharacter(Character *character);
 
-// Fonctions pour modifier les statistiques du personnage
-void modifyVitality(Character *character, int vitality);
-void modifyStrength(Character *character, int strength);
-void modifyDefense(Character *character, int defense);
-
-// Fonction pour afficher les statistiques du personnage
-void printStats(Character *character);
-
-// Fonction pour modifier sa position dans l'espace
-void characterMovement(Character *character);
-void modifyCharacterSize(Character *character, int x, int y);
-void modifyCharacterPosition(Character *character, int width, int height);
+// Afficher les statistiques du personnage
+void printCharacterStats(Character *character);
 
 #endif

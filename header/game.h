@@ -4,7 +4,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 #include "../header/character.h"
 #include "../header/drawBackground.h"  // Assurez-vous d'inclure le fichier d'en-tête pour drawBackground
 
@@ -29,14 +28,14 @@ void mainLoop();
 void loadTextures();
 void initGame();
 void handleEvents();
+void handleMovement();
+void spawnEnemy();
+void renderEnemy(SDL_Renderer *renderer);
 
 void initSDL();
-void draw();
+void drawGame();
 void drawBackground();
 void loadTextures();
-void drawFPS(float fps, SDL_Renderer *renderer, TTF_Font *font);
-void renderText(const char *text, int x, int y, SDL_Renderer *renderer, TTF_Font *font, SDL_Color color);
-
 
 void freeResources();
 

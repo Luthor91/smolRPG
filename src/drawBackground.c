@@ -3,13 +3,20 @@
 #include "../header/game.h"
 #include "../header/drawBackground.h"
 
-void initBackground(SDL_Rect *backgroundRect) {
-    backgroundRect->x = 0;
-    backgroundRect->y = 0;
-    backgroundRect->w = WINDOW_WIDTH;
-    backgroundRect->h = WINDOW_HEIGHT;
+void initBackgroundSize(SDL_Rect *backgroundRect, int width, int height) {
+    backgroundRect->w = width;
+    backgroundRect->h = height;
 }
 
+void initBackgroundPosition(SDL_Rect *backgroundRect, int posx, int posy) {
+    backgroundRect->x = posx;
+    backgroundRect->y = posy;
+}
+
+void initBackground(SDL_Rect *backgroundRect) {
+    initBackgroundSize(backgroundRect, WINDOW_WIDTH, WINDOW_HEIGHT);
+    initBackgroundPosition(backgroundRect, 0, 0);
+}
 
 void fillBackgroundTextures(SDL_Renderer *renderer, SDL_Texture *texture, SDL_Texture *backgroundTextures[GRID_ROWS][GRID_COLS]) {
     for (int i = 0; i < GRID_ROWS; ++i) {
