@@ -16,11 +16,12 @@ void handleSignal(int sig) {
 int main() {
     initSDL();
     initGame();
-    
+
     signal(SIGINT, handleSignal);
-    
+
     mainLoop();
 
     freeResources();
+    
     return 0;
 }

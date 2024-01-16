@@ -57,7 +57,13 @@ void initCharacterArchetype(Character *character, int archetype) {
 }
 
 Character initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype) {
+    
     Character *character = (Character*)malloc(sizeof(Character));
+
+    if (character == NULL) {
+        fprintf(stderr, "Erreur : échec de l'allocation de mémoire pour Character.\n");
+        exit(EXIT_FAILURE); // ou gérez l'erreur d'une manière appropriée pour votre programme
+    }
 
     initCharacterPosition(character, 0, 0);
     initCharacterSize(character, 32, 32);

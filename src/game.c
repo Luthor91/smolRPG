@@ -47,8 +47,6 @@ void spawnEnemy() {
 }
 
 void initGame() {
-    // Constantes pour la grille du fond d'écran
-
     window = SDL_CreateWindow("Mon Jeu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     if (!window) {
         fprintf(stderr, "Erreur lors de la création de la fenêtre : %s\n", SDL_GetError());
@@ -69,7 +67,6 @@ void initGame() {
     initBackground(&backgroundRect);
 
     fillBackgroundTextures(groundTexture, backgroundTextures);
-    printf("init player");
     character = initCharacter("assets/characters/main_character/default_idle_1.png", renderer, 0);
     printf("spawn enemy");
     spawnEnemy();
@@ -92,7 +89,7 @@ void handleMovements() {
 void mainLoop() {
   
     while (isGameRunning == 1) {
-
+        printf("tst : %d\n", numEnemies);
         if (isInFight == 1) {
             handleEvents();
             drawFightInterface(renderer, &character, &enemyFighted);
