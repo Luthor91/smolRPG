@@ -1,10 +1,11 @@
 #ifndef CHARACTERMOVEMENT_H
 #define CHARACTERMOVEMENT_H
+
 #include "../header/character.h"
 #include "../header/game.h"
 #include "../header/functions.h"
 
-#include "../header/fight.h"
+extern Character enemyFighted;
 
 void characterMovementRandom(Character *character);
 void characterMovementBorder(Character *character);

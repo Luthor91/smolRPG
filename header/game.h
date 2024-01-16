@@ -6,6 +6,7 @@
 #include <SDL2/SDL_image.h>
 #include "../header/character.h"
 #include "../header/drawBackground.h"  // Assurez-vous d'inclure le fichier d'en-tête pour drawBackground
+#include "../header/fightDraw.h"
 
 // Constantes pour la taille de la fenêtre
 #define WINDOW_WIDTH 960  // Remplacez par la largeur souhaitée
@@ -18,16 +19,20 @@
 
 // Déclaration des variables globales
 extern Character character;
+extern Character enemyFighted;
 extern SDL_Texture *backgroundTexture;
 extern SDL_Rect backgroundRect;
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
+extern int isGameRunning;
+extern int isInFight;
 
 // Fonctions
 void mainLoop();
 void loadTextures();
 void initGame();
 void handleEvents();
+void handleFightClick(int mouseX, int mouseY);
 void handleMovement();
 void spawnEnemy();
 void renderEnemy(SDL_Renderer *renderer);

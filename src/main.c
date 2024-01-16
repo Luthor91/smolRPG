@@ -1,3 +1,4 @@
+// main.c
 #include <signal.h>
 #include <stdlib.h>
 

@@ -1,11 +1,10 @@
+// character.c
 #include "../header/functions.h"
 #include "../header/character.h"
 #include "../header/characterMovement.h"
 #include "../header/game.h"
 #include "../header/fight.h"
 #include <stdio.h>
-
-// character.c
 
 void initCharacterTexture(Character *character) {
     if (!character->renderer) {
@@ -57,7 +56,9 @@ void initCharacterArchetype(Character *character, int archetype) {
     character->archetype = archetype;
 }
 
-void initCharacter(Character *character, const char *filePath, SDL_Renderer *renderer, int archetype) {
+Character initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype) {
+    Character *character = (Character*)malloc(sizeof(Character));
+
     initCharacterPosition(character, 0, 0);
     initCharacterSize(character, 32, 32);
     initCharacterStats(character, 100, 10, 5);
@@ -73,7 +74,10 @@ void initCharacter(Character *character, const char *filePath, SDL_Renderer *ren
     else { addCharacterSprite(character, "assets/characters/main_character/default_idle_1.png"); }
 
     initCharacterTexture(character);
+
+    return *character;
 }
+
 
 void modifyCharacterSize(Character *character, int width, int height) {
     character->width = width;
@@ -86,6 +90,10 @@ void modifyCharacterPosition(Character *character, int x, int y) {
 }
 
 void modifyCharacterVitality(Character *character, int vitality) {
+    if(vitality <= 0) {
+        destroyCharacter(character);
+        isInFight = 0;
+    }
     character->vitality = vitality;
 }
 
@@ -127,13 +135,34 @@ void changeCharacterCurrentSprite(Character *character, int index) {
     else                                    { fprintf(stderr, "Indice de sprite invalide.\n"); }
 }
 
+// Ajoutez un ennemi à la liste
+void addEnemy(Character newEnemy) {
+    if (numEnemies < MAX_ENEMIES) {
+        enemies[numEnemies] = newEnemy;
+        numEnemies++;
+    } else {
+        fprintf(stderr, "Impossible d'ajouter plus d'ennemis. Tableau plein.\n");
+    }
+}
+
+// Retirez un ennemi de la liste en fonction de l'indice
+void removeEnemy(int index) {
+    if (index >= 0 && index < numEnemies) {
+        // Déplacez les éléments suivants d'un indice vers le haut pour remplir l'emplacement supprimé
+        for (int i = index; i < numEnemies - 1; i++) {
+            enemies[i] = enemies[i + 1];
+        }
+        numEnemies--;
+    } else {
+        fprintf(stderr, "Indice d'ennemi invalide.\n");
+    }
+}
+
+
 void destroyCharacter(Character *character) {
-    SDL_DestroyTexture(character->characterTexture[character->currentSpriteIndex]);
+    for (int i = 0; i < MAX_SPRITES; i++) {
+        SDL_DestroyTexture(character->characterTexture[i]);
+    }
+
+    free(character);
 }
-
-void printCharacterStats(Character *character) {
-    /* */
-}
-
-
-// Autres fonctions liées au personnage peuvent être ajoutées ici

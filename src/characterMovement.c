@@ -1,8 +1,7 @@
+// characterMovement.c
 #include <stdio.h>
 
 #include "../header/characterMovement.h"
-
-
 
 void characterMovementRandom(Character *character) {
 
@@ -24,10 +23,7 @@ void characterMovementRandom(Character *character) {
         case 3:
             if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
             character->y += TILE_SIZE;
-
             break;
-
-        default:
     }
 }
 
@@ -35,12 +31,8 @@ void characterMovementBorder(Character *character) {
 
     int randomMovement = generateRandomNumber(1);
 
-    int wallRight = WINDOW_WIDTH - character->x;
-    int wallDown = WINDOW_HEIGHT - character->y;
-
     int closestWallX = 0;
     int closestWallY = 0;
-    int closestWall = 0;
 
     if ( (WINDOW_WIDTH - character->x) < character->x ) {
         closestWallX = WINDOW_WIDTH - character->x;
@@ -189,11 +181,7 @@ void characterMovementLazy(Character *character) {
         case 3:
             if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
             character->y += TILE_SIZE;
-
             break;
-
-        default:
-
     }
 
 }
@@ -224,20 +212,23 @@ int manualMovement(Character *character) {
                     if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
                     character->y += TILE_SIZE;
                     return 1;  
-                default:
-                    return 0;
             }
         }
+        return 0;
     }
 }
 
 void characterMovement(Character *character) {
     Character mainCharacter = getCharacter();
+
+    if(character->vitality <= 0) { return; }
+
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
 
     if( (character->x == mainCharacterPosX) && (character->y == mainCharacterPosY) ) {
-        startCombat(&mainCharacter, character);
+        isInFight = 1;
+        enemyFighted = *character;
     }
     else {
         switch (character->archetype) {
@@ -253,9 +244,9 @@ void characterMovement(Character *character) {
             case 4:
                 characterMovementFighter(character);
                 break;
-            default:
-                break;
         }
     }
+    return;
 }
+
 

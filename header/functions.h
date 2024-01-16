@@ -1,5 +1,5 @@
-#ifndef ENNEMY_H
-#define ENNEMY_H
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
 
 #include <time.h>
 

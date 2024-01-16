@@ -18,7 +18,7 @@ void initBackground(SDL_Rect *backgroundRect) {
     initBackgroundPosition(backgroundRect, 0, 0);
 }
 
-void fillBackgroundTextures(SDL_Renderer *renderer, SDL_Texture *texture, SDL_Texture *backgroundTextures[GRID_ROWS][GRID_COLS]) {
+void fillBackgroundTextures(SDL_Texture *texture, SDL_Texture *backgroundTextures[GRID_ROWS][GRID_COLS]) {
     for (int i = 0; i < GRID_ROWS; ++i) {
         for (int j = 0; j < GRID_COLS; ++j) {
             backgroundTextures[i][j] = texture;
