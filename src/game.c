@@ -5,7 +5,7 @@
 
 Character enemies[MAX_ENEMIES];
 Character enemyFighted;
-Character mainCharacter;
+Character *mainCharacter;
 
 SDL_Texture *backgroundTexture;
 SDL_Rect backgroundRect;
@@ -28,12 +28,16 @@ void initSDL() {
 
 void spawnEnemy() {
 
-    for (size_t i = 0; i <= 4; i++) {
-        Character enemy = initCharacter("assets/ennemies/enemy_blue.png", renderer, i);
-        addEnemy(enemy);
+    size_t i = 0;
+    for (i = 0; i <= 4; i++) {
+        char spritePath[50];
+        snprintf(spritePath, sizeof(spritePath), "assets/ennemies/enemy_%d.png", i);
+        Character *enemy = initCharacter(spritePath, renderer, i);
+
+        addEnemy(*enemy);
         initCharacterPosition(&enemies[i], i*32, i*32);
     }
-
+    numEnemies = i;
 }
 
 void initGame() {
@@ -57,21 +61,19 @@ void initGame() {
     initBackground(&backgroundRect);
 
     fillBackgroundTextures(groundTexture, backgroundTextures);
-    mainCharacter = initCharacter("assets/characters/main_character/default_idle_1.png", renderer, 0);
-    printf("\nspawn enemy");
+    mainCharacter = initCharacter("assets/characters/main_character/default_idle_1.png", renderer, -1);
+    initCharacterPosition(mainCharacter, 512, 512);
     spawnEnemy();
     drawGame();
 
 }
 
 void handleMovements() {
-    int isMoved = manualMovement(&mainCharacter);
+    int isMoved = manualMovement(mainCharacter);
     if (isMoved == 1) { 
-
         for (int i = 0; i < numEnemies; i++) {
             characterMovement(&enemies[i]);
         }
-
         drawGame();
     }
 }
@@ -79,10 +81,9 @@ void handleMovements() {
 void mainLoop() {
   
     while (isGameRunning == 1) {
-        printf("in fight ? %d", isInFight);
         if (isInFight == 1) {
             handleEvents();
-            drawFightInterface(renderer, &mainCharacter, &enemyFighted);
+            drawFightInterface(renderer, mainCharacter, &enemyFighted);
         } else {
             //handleEvents();
             handleMovements();
@@ -104,16 +105,14 @@ void renderEnemy(SDL_Renderer *renderer) {
     }
 }
 
-
-
 void drawGame() {
 
     SDL_RenderClear(renderer);  // Effacez le rendu au début de chaque itération
 
     drawBackground(renderer, backgroundTextures);
 
-    SDL_Rect characterRect = {mainCharacter.x, mainCharacter.y, mainCharacter.width, mainCharacter.height};
-    SDL_RenderCopy(renderer, mainCharacter.characterTexture[mainCharacter.currentSpriteIndex], NULL, &characterRect);
+    SDL_Rect characterRect = {mainCharacter->x, mainCharacter->y, mainCharacter->width, mainCharacter->height};
+    SDL_RenderCopy(renderer, mainCharacter->characterTexture[mainCharacter->currentSpriteIndex], NULL, &characterRect);
 
     renderEnemy(renderer);
 
@@ -149,7 +148,6 @@ void handleEvents() {
                 break;
             default:
                 break;
-            // ... autres cas d'événements ...
         }
     }
 }

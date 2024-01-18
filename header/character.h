@@ -23,11 +23,12 @@ typedef struct {
     int strength;
     int defense;
     int archetype;
+    int index;
 } Character;
 
 extern Character enemies[MAX_ENEMIES];
 extern Character enemyFighted;
-extern Character mainCharacter;
+extern Character *mainCharacter;
 
 extern int numEnemies; 
 
@@ -48,7 +49,7 @@ void initCharacterPosition(Character *character, int posx, int posy);
 void initCharacterArchetype(Character *character, int archetype);
 
 // Initialiser le personnage avec des valeurs par défaut
-Character initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype);
+Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype);
 
 // Modifier la taille du personnage
 void modifyCharacterCharacterSize(Character *character, int width, int height);
@@ -72,6 +73,8 @@ void modifyCharacterArchetype(Character *character, int archetype);
 Character getMainCharacter();
 int getCharacterPositionY(Character *character);
 int getCharacterPositionX(Character *character);
+int isCollidingAgainstEnemies(int posx, int posy);
+Character* getCollidingEnemy(Character* player, int posx, int posy);
 // Ajouter un sprite au tableau de chemins de fichiers
 void addCharacterSprite(Character *character, const char *spritePath);
 
@@ -102,6 +105,7 @@ int manualMovement(Character *character);
 // Mouvement général du personnage
 void characterMovement(Character *character);
 
+void printCharacter(Character *character);
 // Détruire la texture du personnage
 void destroyCharacter(Character *character);
 

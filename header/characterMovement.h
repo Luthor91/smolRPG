@@ -5,8 +5,6 @@
 #include "../header/game.h"
 #include "../header/functions.h"
 
-extern Character enemyFighted;
-
 void characterMovementRandom(Character *character);
 void characterMovementBorder(Character *character);
 void characterMovementFugitive(Character *character);

@@ -226,13 +226,13 @@ void characterMovement(Character *character) {
 
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
+    
+    
+    if (isCollidingAgainstEnemies(mainCharacterPosX, mainCharacterPosY) == 1) {
 
-    if( (character->x == mainCharacterPosX) && (character->y == mainCharacterPosY) ) {
+        enemyFighted = *getCollidingEnemy(&mainCharacter, mainCharacterPosX, mainCharacterPosY);
         isInFight = 1;
-        enemyFighted = *character;
-    }
-    else {
-        isInFight = 0;
+    } else {
         switch (character->archetype) {
             case 0:
                 characterMovementRandom(character);
@@ -253,5 +253,4 @@ void characterMovement(Character *character) {
     }
     return;
 }
-
 

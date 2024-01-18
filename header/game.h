@@ -18,8 +18,6 @@
 #define GRID_COLS (WINDOW_WIDTH / TILE_SIZE)
 
 // Déclaration des variables globales
-extern Character character;
-extern Character enemyFighted;
 extern SDL_Texture *backgroundTexture;
 extern SDL_Rect backgroundRect;
 extern SDL_Window *window;
