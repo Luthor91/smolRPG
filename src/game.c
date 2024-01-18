@@ -5,8 +5,7 @@
 
 Character enemies[MAX_ENEMIES];
 Character enemyFighted;
-Character character;
-int numEnemies = 0;
+Character mainCharacter;
 
 SDL_Texture *backgroundTexture;
 SDL_Rect backgroundRect;
@@ -14,6 +13,7 @@ SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture* backgroundTextures[GRID_ROWS][GRID_COLS];  // Déclarez ici
 
+int numEnemies = 0;
 int isGameRunning = 1;
 int isInFight = 0;
 
@@ -27,22 +27,12 @@ void initSDL() {
 }
 
 void spawnEnemy() {
-    Character enemy = initCharacter("assets/ennemies/enemy_blue.png", renderer, 1);
-    Character enemy0 = initCharacter("assets/ennemies/enemy_red.png", renderer, 1);// Lazy
-    Character enemy1 = initCharacter("assets/ennemies/enemy_white.png", renderer, 2); // Border
-    Character enemy2 = initCharacter("assets/ennemies/enemy_pink.png", renderer, 3); // Fugitive
-    Character enemy3 = initCharacter("assets/ennemies/enemy_yellow.png", renderer, 4); // Fighter
 
-    initCharacterPosition(&enemy0, 64, 64);
-    initCharacterPosition(&enemy1, 128, 128);
-    initCharacterPosition(&enemy2, 256, 256);
-    initCharacterPosition(&enemy3, 512, 512);
-
-    addEnemy(enemy);
-    addEnemy(enemy0);
-    addEnemy(enemy1);
-    addEnemy(enemy2);
-    addEnemy(enemy3);
+    for (size_t i = 0; i <= 4; i++) {
+        Character enemy = initCharacter("assets/ennemies/enemy_blue.png", renderer, i);
+        addEnemy(enemy);
+        initCharacterPosition(&enemies[i], i*32, i*32);
+    }
 
 }
 
@@ -67,15 +57,15 @@ void initGame() {
     initBackground(&backgroundRect);
 
     fillBackgroundTextures(groundTexture, backgroundTextures);
-    character = initCharacter("assets/characters/main_character/default_idle_1.png", renderer, 0);
-    printf("spawn enemy");
+    mainCharacter = initCharacter("assets/characters/main_character/default_idle_1.png", renderer, 0);
+    printf("\nspawn enemy");
     spawnEnemy();
     drawGame();
 
 }
 
 void handleMovements() {
-    int isMoved = manualMovement(&character);
+    int isMoved = manualMovement(&mainCharacter);
     if (isMoved == 1) { 
 
         for (int i = 0; i < numEnemies; i++) {
@@ -89,10 +79,10 @@ void handleMovements() {
 void mainLoop() {
   
     while (isGameRunning == 1) {
-        printf("tst : %d\n", numEnemies);
+        printf("in fight ? %d", isInFight);
         if (isInFight == 1) {
             handleEvents();
-            drawFightInterface(renderer, &character, &enemyFighted);
+            drawFightInterface(renderer, &mainCharacter, &enemyFighted);
         } else {
             //handleEvents();
             handleMovements();
@@ -122,8 +112,8 @@ void drawGame() {
 
     drawBackground(renderer, backgroundTextures);
 
-    SDL_Rect characterRect = {character.x, character.y, character.width, character.height};
-    SDL_RenderCopy(renderer, character.characterTexture[character.currentSpriteIndex], NULL, &characterRect);
+    SDL_Rect characterRect = {mainCharacter.x, mainCharacter.y, mainCharacter.width, mainCharacter.height};
+    SDL_RenderCopy(renderer, mainCharacter.characterTexture[mainCharacter.currentSpriteIndex], NULL, &characterRect);
 
     renderEnemy(renderer);
 
@@ -156,6 +146,8 @@ void handleEvents() {
                     handleClick(mouseX, mouseY); // gérer la localisation du clic
 
                 }
+                break;
+            default:
                 break;
             // ... autres cas d'événements ...
         }

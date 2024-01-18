@@ -27,7 +27,7 @@ typedef struct {
 
 extern Character enemies[MAX_ENEMIES];
 extern Character enemyFighted;
-extern Character character;
+extern Character mainCharacter;
 
 extern int numEnemies; 
 
@@ -69,7 +69,7 @@ void modifyCharacterDefense(Character *character, int defense);
 void modifyCharacterArchetype(Character *character, int archetype);
 
 // Obtenir le personnage
-Character getCharacter();
+Character getMainCharacter();
 int getCharacterPositionY(Character *character);
 int getCharacterPositionX(Character *character);
 // Ajouter un sprite au tableau de chemins de fichiers

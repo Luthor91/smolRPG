@@ -71,7 +71,7 @@ void characterMovementBorder(Character *character) {
 }
 
 void characterMovementFugitive(Character *character) {
-    Character mainCharacter = getCharacter();
+    Character mainCharacter = getMainCharacter();
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
 
@@ -132,7 +132,7 @@ void characterMovementFugitive(Character *character) {
 }
 
 void characterMovementFighter(Character *character) {
-    Character mainCharacter = getCharacter();
+    Character mainCharacter = getMainCharacter();
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
 
@@ -213,13 +213,14 @@ int manualMovement(Character *character) {
                     character->y += TILE_SIZE;
                     return 1;  
             }
+            return 0;
         }
         return 0;
     }
 }
 
 void characterMovement(Character *character) {
-    Character mainCharacter = getCharacter();
+    Character mainCharacter = getMainCharacter();
 
     if(character->vitality <= 0) { return; }
 
@@ -231,7 +232,11 @@ void characterMovement(Character *character) {
         enemyFighted = *character;
     }
     else {
+        isInFight = 0;
         switch (character->archetype) {
+            case 0:
+                characterMovementRandom(character);
+                break;
             case 1:
                 characterMovementLazy(character);
                 break;

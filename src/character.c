@@ -26,7 +26,7 @@ void initCharacterTexture(Character *character) {
     }
 
     character->characterTexture[character->currentSpriteIndex] = SDL_CreateTextureFromSurface(character->renderer, personnageSurface);
-    printf("Ajout de sprite : Chemin = %s\n", spritePath);
+    printf("\nAjout de sprite : Chemin = %s", spritePath);
 
     SDL_FreeSurface(personnageSurface);
 
@@ -58,30 +58,29 @@ void initCharacterArchetype(Character *character, int archetype) {
 
 Character initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype) {
     
-    Character *character = (Character*)malloc(sizeof(Character));
+    Character *charac = (Character*)malloc(sizeof(Character));
 
-    if (character == NULL) {
+    if (charac == NULL) {
         fprintf(stderr, "Erreur : échec de l'allocation de mémoire pour Character.\n");
-        exit(EXIT_FAILURE); // ou gérez l'erreur d'une manière appropriée pour votre programme
+        exit(EXIT_FAILURE);
     }
-
-    initCharacterPosition(character, 0, 0);
-    initCharacterSize(character, 32, 32);
-    initCharacterStats(character, 100, 10, 5);
-    initCharacterArchetype(character, archetype);
-
-    character->renderer = renderer;
 
     for (int i = 0; i < MAX_SPRITES; i++) {
-        character->spritePaths[i] = NULL;
+        charac->spritePaths[i] = NULL;
     }
 
-    if (filePath && filePath[0] != '\0') { addCharacterSprite(character, filePath); } 
-    else { addCharacterSprite(character, "assets/characters/main_character/default_idle_1.png"); }
+    if (filePath && filePath[0] != '\0') { addCharacterSprite(charac, filePath); } 
+    else { addCharacterSprite(charac, "assets/characters/main_character/default_idle_1.png"); }
 
-    initCharacterTexture(character);
+    charac->renderer = renderer;
 
-    return *character;
+    initCharacterPosition(charac, 0, 0);
+    initCharacterSize(charac, 32, 32);
+    initCharacterStats(charac, 100, 10, 5);
+    initCharacterArchetype(charac, archetype);
+    initCharacterTexture(charac);
+
+    return *charac;
 }
 
 
@@ -115,8 +114,8 @@ void modifyCharacterArchetype(Character *character, int archetype) {
     character->archetype = archetype;
 }
 
-Character getCharacter() {
-    return character;
+Character getMainCharacter() {
+    return mainCharacter;
 }
 
 int getCharacterPositionX(Character *character) {
@@ -130,7 +129,7 @@ int getCharacterPositionY(Character *character) {
 // Ajouter un sprite au tableau de chemins de fichiers
 void addCharacterSprite(Character *character, const char *spritePath) {
     int index = character->currentSpriteIndex;
-    
+    printf("\nindex : %d ; max sprite : %d", index, MAX_SPRITES);
     if (index < MAX_SPRITES)    { character->spritePaths[index] = spritePath; } 
     else                        { fprintf(stderr, "Impossible d'ajouter plus de sprites. Tableau plein.\n"); }
 }
