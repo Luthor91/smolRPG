@@ -32,6 +32,7 @@ void initGame();
 void handleEvents();
 void handleFightClick(int mouseX, int mouseY);
 void handleMovement();
+void handleEnemyCollision();
 void spawnEnemy();
 void renderEnemy(SDL_Renderer *renderer);
 
