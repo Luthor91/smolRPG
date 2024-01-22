@@ -27,6 +27,7 @@ void initSDL() {
 }
 
 void spawnEnemy() {
+
     size_t i = 0;
     for (i = 0; i <= 4; i++) {
         char spritePath[50];
@@ -162,6 +163,7 @@ void handleEvents() {
         }
     }
 }
+
 
 void freeResources() {
     if (backgroundTexture) {

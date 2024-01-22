@@ -73,6 +73,7 @@ Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int arche
 
     charac->renderer = renderer;
 
+
     initCharacterPosition(charac, 0, 0);
     initCharacterSize(charac, 32, 32);
     initCharacterStats(charac, 100, 10, 5);
@@ -216,7 +217,7 @@ Character* getCollidingEnemy(Character* player, int posx, int posy) {
                 return &enemies[i];
             }
         }
-        
+       
     }
     return 0;
 }

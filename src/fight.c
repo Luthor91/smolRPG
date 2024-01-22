@@ -6,6 +6,7 @@
 #include "fight.h"
 
 void startCombat(Character *character, Character *enemy) {
+
     printf("\nDébut du combat");
     
     modifyCharacterVitality(character, character->vitality - 1);

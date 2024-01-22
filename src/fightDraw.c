@@ -37,5 +37,3 @@ void createAttackButtonTexture(SDL_Renderer *renderer, SDL_Texture **attackButto
     // Utilisez SDL functions pour dessiner le bouton d'attaque
     // Assurez-vous de libérer la mémoire appropriée à la fin
 }
-
-// Implémentez les fonctions pour créer d'autres textures
