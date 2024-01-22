@@ -192,9 +192,9 @@ int manualMovement(Character *character) {
     while (SDL_PollEvent(&event) != 0) {
         if (event.type == SDL_QUIT) {
             exit(0);
-        }
-        else if (event.type == SDL_KEYDOWN) {
-
+        } else if (event.type == SDL_KEYDOWN) {
+            printf("\nDéplacement Player");
+            printf("\nx:%d ; y:%d", character->x, character->y);
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
                     if (character->x < TILE_SIZE) break;
@@ -227,30 +227,24 @@ void characterMovement(Character *character) {
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
     
-    
-    if (isCollidingAgainstEnemies(mainCharacterPosX, mainCharacterPosY) == 1) {
-
-        enemyFighted = *getCollidingEnemy(&mainCharacter, mainCharacterPosX, mainCharacterPosY);
-        isInFight = 1;
-    } else {
-        switch (character->archetype) {
-            case 0:
-                characterMovementRandom(character);
-                break;
-            case 1:
-                characterMovementLazy(character);
-                break;
-            case 2:
-                characterMovementBorder(character);
-                break;
-            case 3:
-                characterMovementFugitive(character);
-                break;
-            case 4:
-                characterMovementFighter(character);
-                break;
-        }
+    switch (character->archetype) {
+        case 0:
+            characterMovementRandom(character);
+            break;
+        case 1:
+            characterMovementLazy(character);
+            break;
+        case 2:
+            characterMovementBorder(character);
+            break;
+        case 3:
+            characterMovementFugitive(character);
+            break;
+        case 4:
+            characterMovementFighter(character);
+            break;
     }
+    
     return;
 }
 

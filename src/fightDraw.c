@@ -5,6 +5,9 @@
 #include "../header/character.h"
 
 void drawFightInterface(SDL_Renderer *renderer, Character *character, Character *enemy) {
+
+    printf("\nCréation interface combat");
+    
     SDL_Texture *healthBarTexture = NULL;
     SDL_Texture *attackButtonTexture = NULL;
 
@@ -14,10 +17,8 @@ void drawFightInterface(SDL_Renderer *renderer, Character *character, Character 
     // Code pour organiser et dessiner l'interface de combat
     // Utilisez SDL functions pour définir les positions relatives
     // des textures et les dessiner sur le renderer
-    
-    // Event if clicked 
-    startCombat(character, enemy);
 
+    startCombat(character, enemy);
 
     // Assurez-vous de libérer la mémoire des textures à la fin
     SDL_DestroyTexture(healthBarTexture);
@@ -36,5 +37,3 @@ void createAttackButtonTexture(SDL_Renderer *renderer, SDL_Texture **attackButto
     // Utilisez SDL functions pour dessiner le bouton d'attaque
     // Assurez-vous de libérer la mémoire appropriée à la fin
 }
-
-// Implémentez les fonctions pour créer d'autres textures

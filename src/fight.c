@@ -7,15 +7,26 @@
 
 void startCombat(Character *character, Character *enemy) {
 
+    printf("\nDébut du combat");
+    
     modifyCharacterVitality(character, character->vitality - 1);
     modifyCharacterVitality(enemy, enemy->vitality - 10);
 
-    if (enemy->vitality <= 0) { 
-        
+    // Affichez les statistiques de l'ennemi après la modification
+    printCharacter(enemy);
+
+    // Vérifiez ensuite les conditions de fin de combat
+    if (enemy->vitality <= 0) {
+        printf("\nEnnemi mort");
         removeEnemy(enemy->index);
         isInFight = 0;
+        return;
     } else if (character->vitality <= 0)  { 
+        printf("\nCombat perdu");
         destroyCharacter(character);  
         isInFight = 0;
-    }    
+        return;
+    } else {
+        return;
+    }
 }

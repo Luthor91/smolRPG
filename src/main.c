@@ -1,6 +1,7 @@
 // main.c
 #include <signal.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../header/game.h"
 
@@ -18,7 +19,7 @@ int main() {
     initGame();
 
     signal(SIGINT, handleSignal);
-
+    printf("\nDébut du jeu");
     mainLoop();
 
     freeResources();

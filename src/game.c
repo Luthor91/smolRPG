@@ -35,7 +35,8 @@ void spawnEnemy() {
         Character *enemy = initCharacter(spritePath, renderer, i);
 
         addEnemy(*enemy);
-        initCharacterPosition(&enemies[i], i*32, i*32);
+        initCharacterPosition(&enemies[i], i*2*32, i*2*32);
+        initCharacterSize(&enemies[i], i*16, i*16);
     }
     numEnemies = i;
 }
@@ -78,15 +79,27 @@ void handleMovements() {
     }
 }
 
+void handleEnemyCollision() {
+    
+    if (isCollidingAgainstEnemies(mainCharacter->x, mainCharacter->y) == 1) {
+        printf("\nPlayer collision avec Ennemi");
+        enemyFighted = *getCollidingEnemy(mainCharacter, mainCharacter->x, mainCharacter->y);
+        isInFight = 1;
+    } 
+}
+
 void mainLoop() {
   
     while (isGameRunning == 1) {
         if (isInFight == 1) {
+            
             handleEvents();
             drawFightInterface(renderer, mainCharacter, &enemyFighted);
+
         } else {
             //handleEvents();
             handleMovements();
+            handleEnemyCollision();
             SDL_Delay(20);
         }
     }
@@ -100,7 +113,6 @@ void renderEnemy(SDL_Renderer *renderer) {
             .w = enemies[i].width,
             .h = enemies[i].height
         };
-
         SDL_RenderCopy(renderer, enemies[i].characterTexture[enemies[i].currentSpriteIndex], NULL, &enemyRect);
     }
 }
@@ -172,4 +184,3 @@ void freeResources() {
     IMG_Quit();
     SDL_Quit();
 }
-

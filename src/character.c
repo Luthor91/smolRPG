@@ -73,6 +73,7 @@ Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int arche
 
     charac->renderer = renderer;
 
+
     initCharacterPosition(charac, 0, 0);
     initCharacterSize(charac, 32, 32);
     initCharacterStats(charac, 100, 10, 5);
@@ -174,26 +175,49 @@ void destroyCharacter(Character *charac) {
     for (size_t i = 0; i < MAX_SPRITES; i++) {
         SDL_DestroyTexture(charac->characterTexture[i]);
     }
-    
     free(charac);
 }
 
 int isCollidingAgainstEnemies(int posx, int posy) {
-
     for (size_t i = 0; i < numEnemies; i++) {
-        if (posx == enemies[i].x && posy == enemies[i].y ) {
-            return 1;
+        //printf("\nX : %d => %d", enemies[i].x, enemies[i].x+enemies[i].width);
+        //printf("\nY : %d => %d", enemies[i].y, enemies[i].y+enemies[i].height);
+
+        for (size_t j = 0; j < enemies[i].width/32; j++)
+        {
+            if (
+                ((posx > enemies[i].x * j) && (posx < (enemies[i].x * j) + enemies[i].width))
+                &&
+                ((posy > enemies[i].y) && (posx < enemies[i].y + enemies[i].height))
+            ) {
+                printf("\nCollision avec un enemi");
+                return 1;
+            }
         }
+        
     }
     return 0;
 }
 
-Character* getCollidingEnemy(Character* player, int posx, int posy) {
+            
 
+Character* getCollidingEnemy(Character* player, int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
-        if (posx == enemies[i].x && posy == enemies[i].y ) {
-            return &enemies[i];
+        //printf("\nX : %d => %d", enemies[i].x, enemies[i].x+enemies[i].width);
+        //printf("\nY : %d => %d", enemies[i].y, enemies[i].y+enemies[i].height);
+
+        for (size_t j = 0; j < enemies[i].width/32; j++)
+        {
+            if (
+                ((posx > enemies[i].x * j) && (posx < (enemies[i].x * j) + enemies[i].width))
+                &&
+                ((posy > enemies[i].y) && (posx < enemies[i].y + enemies[i].height))
+            ) {
+                printf("\nCollision avec un enemi");
+                return &enemies[i];
+            }
         }
+       
     }
     return 0;
 }
