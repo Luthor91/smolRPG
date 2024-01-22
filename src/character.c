@@ -1,11 +1,10 @@
+// character.c
 #include "../header/functions.h"
 #include "../header/character.h"
 #include "../header/characterMovement.h"
 #include "../header/game.h"
 #include "../header/fight.h"
 #include <stdio.h>
-
-// character.c
 
 void initCharacterTexture(Character *character) {
     if (!character->renderer) {
@@ -27,7 +26,6 @@ void initCharacterTexture(Character *character) {
     }
 
     character->characterTexture[character->currentSpriteIndex] = SDL_CreateTextureFromSurface(character->renderer, personnageSurface);
-    printf("Ajout de sprite : Chemin = %s\n", spritePath);
 
     SDL_FreeSurface(personnageSurface);
 
@@ -57,22 +55,31 @@ void initCharacterArchetype(Character *character, int archetype) {
     character->archetype = archetype;
 }
 
-void initCharacter(Character *character, const char *filePath, SDL_Renderer *renderer, int archetype) {
-    initCharacterPosition(character, 0, 0);
-    initCharacterSize(character, 32, 32);
-    initCharacterStats(character, 100, 10, 5);
-    initCharacterArchetype(character, archetype);
+Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype) {
+    
+    Character *charac = (Character*)calloc(1, sizeof(Character));
 
-    character->renderer = renderer;
-
-    for (int i = 0; i < MAX_SPRITES; i++) {
-        character->spritePaths[i] = NULL;
+    if (charac == NULL) {
+        fprintf(stderr, "Erreur : échec de l'allocation de mémoire pour Character.\n");
+        exit(EXIT_FAILURE);
     }
 
-    if (filePath && filePath[0] != '\0') { addCharacterSprite(character, filePath); } 
-    else { addCharacterSprite(character, "assets/characters/main_character/default_idle_1.png"); }
+    for (int i = 0; i < MAX_SPRITES; i++) {
+        charac->spritePaths[i] = NULL;
+    }
 
-    initCharacterTexture(character);
+    if (filePath && filePath[0] != '\0') { addCharacterSprite(charac, filePath); } 
+    else { addCharacterSprite(charac, "assets/characters/main_character/default_idle_1.png"); }
+
+    charac->renderer = renderer;
+
+    initCharacterPosition(charac, 0, 0);
+    initCharacterSize(charac, 32, 32);
+    initCharacterStats(charac, 100, 10, 5);
+    initCharacterArchetype(charac, archetype);
+    initCharacterTexture(charac);
+
+    return charac;
 }
 
 void modifyCharacterSize(Character *character, int width, int height) {
@@ -101,8 +108,8 @@ void modifyCharacterArchetype(Character *character, int archetype) {
     character->archetype = archetype;
 }
 
-Character getCharacter() {
-    return character;
+Character getMainCharacter() {
+    return *mainCharacter;
 }
 
 int getCharacterPositionX(Character *character) {
@@ -116,7 +123,7 @@ int getCharacterPositionY(Character *character) {
 // Ajouter un sprite au tableau de chemins de fichiers
 void addCharacterSprite(Character *character, const char *spritePath) {
     int index = character->currentSpriteIndex;
-    
+
     if (index < MAX_SPRITES)    { character->spritePaths[index] = spritePath; } 
     else                        { fprintf(stderr, "Impossible d'ajouter plus de sprites. Tableau plein.\n"); }
 }
@@ -127,13 +134,89 @@ void changeCharacterCurrentSprite(Character *character, int index) {
     else                                    { fprintf(stderr, "Indice de sprite invalide.\n"); }
 }
 
-void destroyCharacter(Character *character) {
-    SDL_DestroyTexture(character->characterTexture[character->currentSpriteIndex]);
+// Ajoutez un ennemi à la liste
+void addEnemy(Character newEnemy) {
+    if (numEnemies < MAX_ENEMIES) {
+        newEnemy.index = numEnemies;
+        enemies[numEnemies] = newEnemy;
+        numEnemies++;
+    } else {
+        fprintf(stderr, "Impossible d'ajouter plus d'ennemis. Tableau plein.\n");
+    }
 }
 
-void printCharacterStats(Character *character) {
-    /* */
+// Retirez un ennemi de la liste en fonction de l'indice
+void removeEnemy(int index) {
+    if (index >= 0 && index < numEnemies) {
+        
+        destroyCharacter(&enemies[index]);
+        printf("Memory freed for enemy at index %d\n", index);
+
+        // Déplacez les éléments suivants d'un indice vers le haut pour remplir l'emplacement supprimé
+        for (int i = index; i < numEnemies - 1; i++) {
+            enemies[i] = enemies[i + 1];
+        }
+        numEnemies--;
+    } else {
+        fprintf(stderr, "Indice d'ennemi invalide.\n");
+    }
 }
 
+void printCharacter(Character *character) {
+    printf("\nvit: %d, str: %d, def: %d\nw: %d, h: %d\nx: %d, y: %d\n", 
+        character->vitality, character->strength, 
+        character->defense, character->width, 
+        character->x, character->y
+    );
+}
 
-// Autres fonctions liées au personnage peuvent être ajoutées ici
+void destroyCharacter(Character *charac) {
+    for (size_t i = 0; i < MAX_SPRITES; i++) {
+        SDL_DestroyTexture(charac->characterTexture[i]);
+    }
+    free(charac);
+}
+
+int isCollidingAgainstEnemies(int posx, int posy) {
+    for (size_t i = 0; i < numEnemies; i++) {
+        //printf("\nX : %d => %d", enemies[i].x, enemies[i].x+enemies[i].width);
+        //printf("\nY : %d => %d", enemies[i].y, enemies[i].y+enemies[i].height);
+
+        for (size_t j = 0; j < enemies[i].width/32; j++)
+        {
+            if (
+                ((posx > enemies[i].x * j) && (posx < (enemies[i].x * j) + enemies[i].width))
+                &&
+                ((posy > enemies[i].y) && (posx < enemies[i].y + enemies[i].height))
+            ) {
+                printf("\nCollision avec un enemi");
+                return 1;
+            }
+        }
+        
+    }
+    return 0;
+}
+
+            
+
+Character* getCollidingEnemy(Character* player, int posx, int posy) {
+    for (size_t i = 0; i < numEnemies; i++) {
+        //printf("\nX : %d => %d", enemies[i].x, enemies[i].x+enemies[i].width);
+        //printf("\nY : %d => %d", enemies[i].y, enemies[i].y+enemies[i].height);
+
+        for (size_t j = 0; j < enemies[i].width/32; j++)
+        {
+            if (
+                ((posx > enemies[i].x * j) && (posx < (enemies[i].x * j) + enemies[i].width))
+                &&
+                ((posy > enemies[i].y) && (posx < enemies[i].y + enemies[i].height))
+            ) {
+                printf("\nCollision avec un enemi");
+                return &enemies[i];
+            }
+        }
+        
+    }
+    return 0;
+}

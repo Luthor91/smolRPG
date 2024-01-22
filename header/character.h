@@ -4,10 +4,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-// Définir la constante pour le nombre maximum de sprites
 #define MAX_SPRITES 10
 #define CHARACTER_HEIGHT 32
 #define CHARACTER_WIDTH 32
+
+#define MAX_ENEMIES 50
 
 typedef struct {
     SDL_Renderer *renderer;
@@ -22,7 +23,15 @@ typedef struct {
     int strength;
     int defense;
     int archetype;
+    int index;
 } Character;
+
+extern Character enemies[MAX_ENEMIES];
+extern Character enemyFighted;
+extern Character *mainCharacter;
+
+extern int numEnemies; 
+
 
 // Initialiser la texture du personnage
 void initCharacterTexture(Character *character);
@@ -40,7 +49,7 @@ void initCharacterPosition(Character *character, int posx, int posy);
 void initCharacterArchetype(Character *character, int archetype);
 
 // Initialiser le personnage avec des valeurs par défaut
-void initCharacter(Character *character, const char *filePath, SDL_Renderer *renderer, int archetype);
+Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype);
 
 // Modifier la taille du personnage
 void modifyCharacterCharacterSize(Character *character, int width, int height);
@@ -61,11 +70,16 @@ void modifyCharacterDefense(Character *character, int defense);
 void modifyCharacterArchetype(Character *character, int archetype);
 
 // Obtenir le personnage
-Character getCharacter();
-int getCharacterPositionX(Character *character);
+Character getMainCharacter();
 int getCharacterPositionY(Character *character);
+int getCharacterPositionX(Character *character);
+int isCollidingAgainstEnemies(int posx, int posy);
+Character* getCollidingEnemy(Character* player, int posx, int posy);
 // Ajouter un sprite au tableau de chemins de fichiers
 void addCharacterSprite(Character *character, const char *spritePath);
+
+void addEnemy(Character newEnemy);
+void removeEnemy(int index);
 
 // Changer le sprite actuel en utilisant l'indice fourni
 void changeCharacterCurrentSprite(Character *character, int index);
@@ -91,10 +105,8 @@ int manualMovement(Character *character);
 // Mouvement général du personnage
 void characterMovement(Character *character);
 
+void printCharacter(Character *character);
 // Détruire la texture du personnage
 void destroyCharacter(Character *character);
-
-// Afficher les statistiques du personnage
-void printCharacterStats(Character *character);
 
 #endif

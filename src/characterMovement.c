@@ -1,8 +1,7 @@
+// characterMovement.c
 #include <stdio.h>
 
 #include "../header/characterMovement.h"
-
-
 
 void characterMovementRandom(Character *character) {
 
@@ -24,10 +23,7 @@ void characterMovementRandom(Character *character) {
         case 3:
             if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
             character->y += TILE_SIZE;
-
             break;
-
-        default:
     }
 }
 
@@ -35,12 +31,8 @@ void characterMovementBorder(Character *character) {
 
     int randomMovement = generateRandomNumber(1);
 
-    int wallRight = WINDOW_WIDTH - character->x;
-    int wallDown = WINDOW_HEIGHT - character->y;
-
     int closestWallX = 0;
     int closestWallY = 0;
-    int closestWall = 0;
 
     if ( (WINDOW_WIDTH - character->x) < character->x ) {
         closestWallX = WINDOW_WIDTH - character->x;
@@ -79,7 +71,7 @@ void characterMovementBorder(Character *character) {
 }
 
 void characterMovementFugitive(Character *character) {
-    Character mainCharacter = getCharacter();
+    Character mainCharacter = getMainCharacter();
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
 
@@ -140,7 +132,7 @@ void characterMovementFugitive(Character *character) {
 }
 
 void characterMovementFighter(Character *character) {
-    Character mainCharacter = getCharacter();
+    Character mainCharacter = getMainCharacter();
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
 
@@ -189,11 +181,7 @@ void characterMovementLazy(Character *character) {
         case 3:
             if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
             character->y += TILE_SIZE;
-
             break;
-
-        default:
-
     }
 
 }
@@ -204,9 +192,9 @@ int manualMovement(Character *character) {
     while (SDL_PollEvent(&event) != 0) {
         if (event.type == SDL_QUIT) {
             exit(0);
-        }
-        else if (event.type == SDL_KEYDOWN) {
-
+        } else if (event.type == SDL_KEYDOWN) {
+            printf("\nDéplacement Player");
+            printf("\nx:%d ; y:%d", character->x, character->y);
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
                     if (character->x < TILE_SIZE) break;
@@ -224,38 +212,39 @@ int manualMovement(Character *character) {
                     if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
                     character->y += TILE_SIZE;
                     return 1;  
-                default:
-                    return 0;
             }
+            return 0;
         }
+        return 0;
     }
 }
 
 void characterMovement(Character *character) {
-    Character mainCharacter = getCharacter();
+    Character mainCharacter = getMainCharacter();
+
+    if(character->vitality <= 0) { return; }
+
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
-
-    if( (character->x == mainCharacterPosX) && (character->y == mainCharacterPosY) ) {
-        startCombat(&mainCharacter, character);
+    
+    switch (character->archetype) {
+        case 0:
+            characterMovementRandom(character);
+            break;
+        case 1:
+            characterMovementLazy(character);
+            break;
+        case 2:
+            characterMovementBorder(character);
+            break;
+        case 3:
+            characterMovementFugitive(character);
+            break;
+        case 4:
+            characterMovementFighter(character);
+            break;
     }
-    else {
-        switch (character->archetype) {
-            case 1:
-                characterMovementLazy(character);
-                break;
-            case 2:
-                characterMovementBorder(character);
-                break;
-            case 3:
-                characterMovementFugitive(character);
-                break;
-            case 4:
-                characterMovementFighter(character);
-                break;
-            default:
-                break;
-        }
-    }
+    
+    return;
 }
 

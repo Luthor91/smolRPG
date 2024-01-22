@@ -1,5 +1,7 @@
+// main.c
 #include <signal.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../header/game.h"
 
@@ -15,11 +17,12 @@ void handleSignal(int sig) {
 int main() {
     initSDL();
     initGame();
-    
+
     signal(SIGINT, handleSignal);
-    
+    printf("\nDébut du jeu");
     mainLoop();
 
     freeResources();
+    
     return 0;
 }

@@ -1,20 +1,31 @@
+// fight.c
 #include <stdio.h>
 
 #include "character.h"
+#include "spell.h"
 #include "fight.h"
 
 void startCombat(Character *character, Character *enemy) {
-    printf("Combat entre le personnage et l'ennemi !\n");
+    printf("\nDébut du combat");
+    
+    modifyCharacterVitality(character, character->vitality - 1);
+    modifyCharacterVitality(enemy, enemy->vitality - 10);
 
-    // Ajoutez ici la logique spécifique au combat, par exemple des attaques, des dégâts, etc.
+    // Affichez les statistiques de l'ennemi après la modification
+    printCharacter(enemy);
 
-    // Une fois le combat terminé, vous pouvez mettre à jour les statistiques du personnage et de l'ennemi
-    // en fonction du résultat du combat.
-
-    // Exemple :
-    character->vitality -= 10;  // Réduire la vitalité du personnage
-    enemy->vitality -= 5;       // Réduire la vitalité de l'ennemi
-
-    // Affichez le résultat du combat
-    printf("Résultat du combat : Personnage - Vitalité: %d, Ennemi - Vitalité: %d\n", character->vitality, enemy->vitality);
+    // Vérifiez ensuite les conditions de fin de combat
+    if (enemy->vitality <= 0) {
+        printf("\nEnnemi mort");
+        removeEnemy(enemy->index);
+        isInFight = 0;
+        return;
+    } else if (character->vitality <= 0)  { 
+        printf("\nCombat perdu");
+        destroyCharacter(character);  
+        isInFight = 0;
+        return;
+    } else {
+        return;
+    }
 }

@@ -1,18 +1,21 @@
 // game.c
+#include "../header/fightDraw.h"
 #include "../header/game.h"
 #include "../header/drawBackground.h"
 
-Character character;
-Character enemy;
-Character enemy0;
-Character enemy1;
-Character enemy2;
-Character enemy3;
+Character enemies[MAX_ENEMIES];
+Character enemyFighted;
+Character *mainCharacter;
+
 SDL_Texture *backgroundTexture;
 SDL_Rect backgroundRect;
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture* backgroundTextures[GRID_ROWS][GRID_COLS];  // Déclarez ici
+
+int numEnemies = 0;
+int isGameRunning = 1;
+int isInFight = 0;
 
 void initSDL() {
     // Assurez-vous de détruire correctement les ressources ici si nécessaire
@@ -24,29 +27,20 @@ void initSDL() {
 }
 
 void spawnEnemy() {
-    initCharacter(&enemy, "assets/ennemies/enemy_blue.png", renderer, 1);
+    size_t i = 0;
+    for (i = 0; i <= 4; i++) {
+        char spritePath[50];
+        snprintf(spritePath, sizeof(spritePath), "assets/ennemies/enemy_%d.png", i);
+        Character *enemy = initCharacter(spritePath, renderer, i);
 
-    // Lazy
-    initCharacter(&enemy0, "assets/ennemies/enemy_red.png", renderer, 1);
-    initCharacterPosition(&enemy0, 64, 64);
-
-    // Border
-    initCharacter(&enemy1, "assets/ennemies/enemy_white.png", renderer, 2);
-    initCharacterPosition(&enemy1, 128, 128);
-
-    // Fugitive
-    initCharacter(&enemy2, "assets/ennemies/enemy_pink.png", renderer, 3);
-    initCharacterPosition(&enemy2, 256, 256);
-
-    // Fighter
-    initCharacter(&enemy3, "assets/ennemies/enemy_yellow.png", renderer, 4);
-    initCharacterPosition(&enemy3, 512, 512);
-
+        addEnemy(*enemy);
+        initCharacterPosition(&enemies[i], i*2*32, i*2*32);
+        initCharacterSize(&enemies[i], i*16, i*16);
+    }
+    numEnemies = i;
 }
 
 void initGame() {
-    // Constantes pour la grille du fond d'écran
-
     window = SDL_CreateWindow("Mon Jeu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     if (!window) {
         fprintf(stderr, "Erreur lors de la création de la fenêtre : %s\n", SDL_GetError());
@@ -66,61 +60,61 @@ void initGame() {
 
     initBackground(&backgroundRect);
 
-    fillBackgroundTextures(renderer, groundTexture, backgroundTextures);
-
-    initCharacter(&character, "assets/characters/main_character/default_idle_1.png", renderer, 0);
+    fillBackgroundTextures(groundTexture, backgroundTextures);
+    mainCharacter = initCharacter("assets/characters/main_character/default_idle_1.png", renderer, -1);
+    initCharacterPosition(mainCharacter, 512, 512);
     spawnEnemy();
     drawGame();
 
 }
 
 void handleMovements() {
-    int isMoved = manualMovement(&character);
+    int isMoved = manualMovement(mainCharacter);
     if (isMoved == 1) { 
-        //enemyMovement(&enemy); 
-        characterMovement(&enemy0); 
-        characterMovement(&enemy1); 
-        characterMovement(&enemy2); 
-        characterMovement(&enemy3); 
+        for (int i = 0; i < numEnemies; i++) {
+            characterMovement(&enemies[i]);
+        }
         drawGame();
     }
 }
 
+void handleEnemyCollision() {
+    
+    if (isCollidingAgainstEnemies(mainCharacter->x, mainCharacter->y) == 1) {
+        printf("\nPlayer collision avec Ennemi");
+        enemyFighted = *getCollidingEnemy(mainCharacter, mainCharacter->x, mainCharacter->y);
+        isInFight = 1;
+    } 
+}
+
 void mainLoop() {
-    while (1) {
+  
+    while (isGameRunning == 1) {
+        if (isInFight == 1) {
+            
+            handleEvents();
+            drawFightInterface(renderer, mainCharacter, &enemyFighted);
 
-        handleEvents();
-        handleMovements();
-
-        SDL_Delay(20);
-
+        } else {
+            //handleEvents();
+            handleMovements();
+            handleEnemyCollision();
+            SDL_Delay(20);
+        }
     }
 }
 
 void renderEnemy(SDL_Renderer *renderer) {
-    SDL_Rect enemyRect;
-
-    // Render enemy
-    enemyRect = (SDL_Rect){enemy.x, enemy.y, enemy.width, enemy.height};
-    SDL_RenderCopy(renderer, enemy.characterTexture[enemy.currentSpriteIndex], NULL, &enemyRect);
-
-    // Render enemy0
-    enemyRect = (SDL_Rect){enemy0.x, enemy0.y, enemy0.width, enemy0.height};
-    SDL_RenderCopy(renderer, enemy0.characterTexture[enemy0.currentSpriteIndex], NULL, &enemyRect);
-
-    // Render enemy1
-    enemyRect = (SDL_Rect){enemy1.x, enemy1.y, enemy1.width, enemy1.height};
-    SDL_RenderCopy(renderer, enemy1.characterTexture[enemy1.currentSpriteIndex], NULL, &enemyRect);
-
-    // Render enemy2
-    enemyRect = (SDL_Rect){enemy2.x, enemy2.y, enemy2.width, enemy2.height};
-    SDL_RenderCopy(renderer, enemy2.characterTexture[enemy2.currentSpriteIndex], NULL, &enemyRect);
-
-    // Render enemy3
-    enemyRect = (SDL_Rect){enemy3.x, enemy3.y, enemy3.width, enemy3.height};
-    SDL_RenderCopy(renderer, enemy3.characterTexture[enemy3.currentSpriteIndex], NULL, &enemyRect);
+    for (int i = 0; i < numEnemies; i++) {
+        SDL_Rect enemyRect = {
+            .x = enemies[i].x,
+            .y = enemies[i].y,
+            .w = enemies[i].width,
+            .h = enemies[i].height
+        };
+        SDL_RenderCopy(renderer, enemies[i].characterTexture[enemies[i].currentSpriteIndex], NULL, &enemyRect);
+    }
 }
-
 
 void drawGame() {
 
@@ -128,8 +122,8 @@ void drawGame() {
 
     drawBackground(renderer, backgroundTextures);
 
-    SDL_Rect characterRect = {character.x, character.y, character.width, character.height};
-    SDL_RenderCopy(renderer, character.characterTexture[character.currentSpriteIndex], NULL, &characterRect);
+    SDL_Rect characterRect = {mainCharacter->x, mainCharacter->y, mainCharacter->width, mainCharacter->height};
+    SDL_RenderCopy(renderer, mainCharacter->characterTexture[mainCharacter->currentSpriteIndex], NULL, &characterRect);
 
     renderEnemy(renderer);
 
@@ -137,8 +131,36 @@ void drawGame() {
     
 }
 
+void handleClick(int mouseX, int mouseY) {
+    // Supposons que les coordonnées du bouton d'attaque soient entre x=100 et x=200 et y=300 et y=350
+    if (mouseX >= 100 && mouseX <= 200 && mouseY >= 300 && mouseY <= 350) {
+        // L'utilisateur a cliqué sur le bouton d'attaque
+        // Vous pouvez appeler la fonction de combat ici
+    
+    }
+}
+
 void handleEvents() {
-    //
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_QUIT:
+                // Gérer l'événement de fermeture de fenêtre
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                // Gérer l'événement de clic de souris
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    int mouseX = 0, mouseY = 0;
+                    SDL_GetMouseState(&mouseX, &mouseY);
+                    printf("x : %d ; y : %d\n", mouseX, mouseY);
+                    handleClick(mouseX, mouseY); // gérer la localisation du clic
+
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 void freeResources() {
@@ -160,4 +182,3 @@ void freeResources() {
     IMG_Quit();
     SDL_Quit();
 }
-

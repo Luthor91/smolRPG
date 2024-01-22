@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "fightdraw.h": "c",
+        "game.h": "c",
+        "character.h": "c",
+        "spell.h": "c"
+    }
+}
