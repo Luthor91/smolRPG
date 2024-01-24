@@ -27,16 +27,15 @@ void initSDL() {
 }
 
 void spawnEnemy() {
-
     size_t i = 0;
-    for (i = 0; i <= 4; i++) {
+    for (i = 0; i <= 3; i++) {
         char spritePath[50];
         snprintf(spritePath, sizeof(spritePath), "assets/ennemies/enemy_%d.png", i);
         Character *enemy = initCharacter(spritePath, renderer, i);
 
         addEnemy(*enemy);
-        initCharacterPosition(&enemies[i], i*2*32, i*2*32);
-        initCharacterSize(&enemies[i], i*16, i*16);
+        initCharacterPosition(&enemies[i], 32+i*2*32, 32+i*2*32);
+        initCharacterSize(&enemies[i], 32+i*32, 32+i*32);
     }
     numEnemies = i;
 }
@@ -82,7 +81,6 @@ void handleMovements() {
 void handleEnemyCollision() {
     
     if (isCollidingAgainstEnemies(mainCharacter->x, mainCharacter->y) == 1) {
-        printf("\nPlayer collision avec Ennemi");
         enemyFighted = *getCollidingEnemy(mainCharacter, mainCharacter->x, mainCharacter->y);
         isInFight = 1;
     } 
