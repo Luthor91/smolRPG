@@ -180,15 +180,12 @@ void destroyCharacter(Character *charac) {
 
 int isCollidingAgainstEnemies(int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
-        //printf("\nX : %d => %d", enemies[i].x, enemies[i].x);
-        printf("\nW : %d ; H : %d, nbcase : %d", enemies[i].width, enemies[i].height, enemies[i].width/32);
-
         for (size_t j = 0; j < enemies[i].width/32; j++)
         {
             if (
-                ((posx > enemies[i].x * j) && (posx < (enemies[i].x * j) + enemies[i].width))
+                ((posx >= enemies[i].x * (j + 1) ) && (posx < (enemies[i].x * (j + 1) ) + enemies[i].width))
                 &&
-                ((posy > enemies[i].y) && (posx < enemies[i].y + enemies[i].height))
+                ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
             ) {
                 printf("\nCollision avec un enemi");
                 return 1;
@@ -209,9 +206,9 @@ Character* getCollidingEnemy(Character* player, int posx, int posy) {
         for (size_t j = 0; j < enemies[i].width/32; j++)
         {
             if (
-                ((posx > enemies[i].x * j) && (posx < (enemies[i].x * j) + enemies[i].width))
+                ((posx >= enemies[i].x * (j + 1) ) && (posx < (enemies[i].x * (j + 1) ) + enemies[i].width))
                 &&
-                ((posy > enemies[i].y) && (posx < enemies[i].y + enemies[i].height))
+                ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
             ) {
                 printf("\nCollision avec un enemi");
                 return &enemies[i];
