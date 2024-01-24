@@ -193,8 +193,6 @@ int manualMovement(Character *character) {
         if (event.type == SDL_QUIT) {
             exit(0);
         } else if (event.type == SDL_KEYDOWN) {
-            printf("\nDéplacement Player");
-            printf("\nx:%d ; y:%d", character->x, character->y);
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
                     if (character->x < TILE_SIZE) break;
@@ -226,7 +224,7 @@ void characterMovement(Character *character) {
 
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
-    return;
+
     switch (character->archetype) {
         case 0:
             characterMovementRandom(character);
