@@ -180,8 +180,8 @@ void destroyCharacter(Character *charac) {
 
 int isCollidingAgainstEnemies(int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
-        //printf("\nX : %d => %d", enemies[i].x, enemies[i].x+enemies[i].width);
-        //printf("\nY : %d => %d", enemies[i].y, enemies[i].y+enemies[i].height);
+        //printf("\nX : %d => %d", enemies[i].x, enemies[i].x);
+        printf("\nW : %d ; H : %d, nbcase : %d", enemies[i].width, enemies[i].height, enemies[i].width/32);
 
         for (size_t j = 0; j < enemies[i].width/32; j++)
         {
