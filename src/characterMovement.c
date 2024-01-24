@@ -226,7 +226,7 @@ void characterMovement(Character *character) {
 
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
-    
+    return;
     switch (character->archetype) {
         case 0:
             characterMovementRandom(character);
