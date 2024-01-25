@@ -183,7 +183,7 @@ int isCollidingAgainstEnemies(int posx, int posy) {
         for (size_t j = 0; j < enemies[i].width/TILE_SIZE; j++)
         {
             if (
-                ((posx >= (enemies[i].x +TILE_SIZE*j) ) && (posx < (enemies[i].x + enemies[i].width)))
+                ((posx >= (enemies[i].x + TILE_SIZE * j) ) && (posx < (enemies[i].x + enemies[i].width)))
                 &&
                 ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
             ) {
@@ -210,7 +210,6 @@ Character* getCollidingEnemy(Character* player, int posx, int posy) {
                 return &enemies[i];
             }
         }
-        
     }
     return 0;
 }
