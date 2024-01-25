@@ -13,7 +13,6 @@ void startCombat(Character *character, Character *enemy) {
     modifyCharacterVitality(enemy, enemy->vitality - 10);
 
     // Affichez les statistiques de l'ennemi après la modification
-    printCharacter(enemy);
 
     // Vérifiez ensuite les conditions de fin de combat
     if (enemy->vitality <= 0) {

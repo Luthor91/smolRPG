@@ -188,11 +188,11 @@ void characterMovementLazy(Character *character) {
 
 int manualMovement(Character *character) {
     SDL_Event event;
-
     while (SDL_PollEvent(&event) != 0) {
         if (event.type == SDL_QUIT) {
             exit(0);
         } else if (event.type == SDL_KEYDOWN) {
+            printf("\nDéplacement Joueur");
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
                     if (character->x < TILE_SIZE) break;
@@ -224,6 +224,8 @@ void characterMovement(Character *character) {
 
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
+
+    return;
 
     switch (character->archetype) {
         case 0:

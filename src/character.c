@@ -165,8 +165,8 @@ void removeEnemy(int index) {
 
 void printCharacter(Character *character) {
     printf("\nvit: %d, str: %d, def: %d\nw: %d, h: %d\nx: %d, y: %d\n", 
-        character->vitality, character->strength, 
-        character->defense, character->width, 
+        character->vitality, character->strength, character->defense, 
+        character->width, character->height,
         character->x, character->y
     );
 }
@@ -180,10 +180,10 @@ void destroyCharacter(Character *charac) {
 
 int isCollidingAgainstEnemies(int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
-        for (size_t j = 0; j < enemies[i].width/32; j++)
+        for (size_t j = 1; j <= enemies[i].width/TILE_SIZE; j++)
         {
             if (
-                ((posx >= enemies[i].x * (j + 1) ) && (posx < (enemies[i].x * (j + 1) ) + enemies[i].width))
+                ((posx >= (enemies[i].x +TILE_SIZE*j) ) && (posx < (enemies[i].x + enemies[i].width)))
                 &&
                 ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
             ) {
@@ -200,17 +200,17 @@ int isCollidingAgainstEnemies(int posx, int posy) {
 
 Character* getCollidingEnemy(Character* player, int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
-        for (size_t j = 0; j < enemies[i].width/32; j++)
+        for (size_t j = 1; j <= enemies[i].width/32; j++)
         {
             if (
-                ((posx >= enemies[i].x * (j + 1) ) && (posx < (enemies[i].x * (j + 1) ) + enemies[i].width))
+                ((posx >= (enemies[i].x * j) ) && (posx < (enemies[i].x * j + enemies[i].width)))
                 &&
                 ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
             ) {
                 return &enemies[i];
             }
         }
-       
+        
     }
     return 0;
 }
