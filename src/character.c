@@ -180,7 +180,7 @@ void destroyCharacter(Character *charac) {
 
 int isCollidingAgainstEnemies(int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
-        for (size_t j = 1; j <= enemies[i].width/TILE_SIZE; j++)
+        for (size_t j = 0; j < enemies[i].width/TILE_SIZE; j++)
         {
             if (
                 ((posx >= (enemies[i].x +TILE_SIZE*j) ) && (posx < (enemies[i].x + enemies[i].width)))
@@ -200,7 +200,7 @@ int isCollidingAgainstEnemies(int posx, int posy) {
 
 Character* getCollidingEnemy(Character* player, int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
-        for (size_t j = 1; j <= enemies[i].width/32; j++)
+        for (size_t j = 0; j < enemies[i].width/32; j++)
         {
             if (
                 ((posx >= (enemies[i].x * j) ) && (posx < (enemies[i].x * j + enemies[i].width)))
