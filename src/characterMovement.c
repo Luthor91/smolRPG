@@ -3,28 +3,69 @@
 
 #include "../header/characterMovement.h"
 
-void characterMovementRandom(Character *character) {
-
-    int randomMovement = generateRandomNumber(4);
-
-    switch (randomMovement) {
+void characterHandleMovement(Character *character, int direction, int distance) {
+    
+    character->direction = direction;
+    
+    switch (direction) {
         case 0:
-            if (character->x < TILE_SIZE) break;
-            character->x -= TILE_SIZE;
+            if (character->y < distance) break;
+            character->y -= distance;
             break;
         case 1:
-            if (character->x + TILE_SIZE >= WINDOW_WIDTH) break;
-            character->x += TILE_SIZE;
+            if (character->x + distance >= WINDOW_WIDTH) break;
+            character->x += distance;
             break;
         case 2:
-            if (character->y < TILE_SIZE) break;
-            character->y -= TILE_SIZE;
+            if (character->y + distance >= WINDOW_HEIGHT) break;
+            character->y += distance;
             break;
         case 3:
-            if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
-            character->y += TILE_SIZE;
+            if (character->x < distance) break;
+            character->x -= distance;
+            break;
+        default:
             break;
     }
+}
+
+void characterMovementRandom(Character *character) {
+
+    int characterStep = getCharacterSteps(character) * TILE_SIZE;
+    int randomMovement = generateRandomNumber(4);
+    characterHandleMovement(character, randomMovement, characterStep);
+    /*
+    if (randomMovement == 0) { // LEFT
+        if (character->x >=  character->nbstep) {  
+
+            character->x -=  character->nbstep;
+
+        } else {
+            randomMovement++;
+        }
+    }
+    if (randomMovement == 1) { // RIGHT
+        if (character->x + character->width < WINDOW_WIDTH) {
+            character->x +=  character->nbstep;
+        } else {
+            randomMovement++;
+        }
+    }
+    if (randomMovement == 2) { // UP
+        if (character->y >=  character->nbstep) {
+            character->y -=  character->nbstep;
+        } else {
+            randomMovement++;
+        }
+    }
+    if (randomMovement == 3) { // DOWN
+        if (character->y + character->height < WINDOW_HEIGHT) {
+            characterHandleMovement(character, 2, characterStep);
+        }else {
+            randomMovement++; // Reboucler au debut ?
+        }
+    }
+    */
 }
 
 void characterMovementBorder(Character *character) {
@@ -33,6 +74,7 @@ void characterMovementBorder(Character *character) {
 
     int closestWallX = 0;
     int closestWallY = 0;
+    int characterStep = getCharacterSteps(character) * TILE_SIZE;
 
     if ( (WINDOW_WIDTH - character->x) < character->x ) {
         closestWallX = WINDOW_WIDTH - character->x;
@@ -45,24 +87,24 @@ void characterMovementBorder(Character *character) {
     if ( closestWallX < closestWallY ) {
         switch (randomMovement) {
             case 0:
-                if (character->y < TILE_SIZE) break;
-                character->y -= TILE_SIZE;
+                if (character->y <  characterStep) break;
+                characterHandleMovement(character, 0, characterStep);
                 break;
             case 1:
-                if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
-                character->y += TILE_SIZE;
+                if (character->y +  characterStep >= WINDOW_HEIGHT) break;
+                characterHandleMovement(character, 2, characterStep);
                 break;
         }
     }
     else if ( closestWallX > closestWallY ){
         switch (randomMovement) {
             case 0:
-                if (character->x < TILE_SIZE) break;
-                character->x -= TILE_SIZE;
+                if (character->x <  characterStep) break;
+                characterHandleMovement(character, 3, characterStep);
                 break;
             case 1:
-                if (character->x + TILE_SIZE >= WINDOW_WIDTH) break;
-                character->x += TILE_SIZE;
+                if (character->x +  characterStep >= WINDOW_WIDTH) break;
+                characterHandleMovement(character, 1, characterStep);
                 break;
         }
     }
@@ -74,58 +116,35 @@ void characterMovementFugitive(Character *character) {
     Character mainCharacter = getMainCharacter();
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
-
+    int characterStep = getCharacterSteps(character) * TILE_SIZE;
     // Calculer la différence entre les positions du personnage et de l'ennemi
     int deltaX = mainCharacterPosX - character->x;
     int deltaY = mainCharacterPosY - character->y;
 
     // Si l'ennemi est dans un coin, choisir une direction aléatoire
-    if ((character->x <= TILE_SIZE && character->y <= TILE_SIZE) ||
-        (character->x + TILE_SIZE >= WINDOW_WIDTH - TILE_SIZE && character->y <= TILE_SIZE) ||
-        (character->x <= TILE_SIZE && character->y + TILE_SIZE >= WINDOW_HEIGHT - TILE_SIZE) ||
-        (character->x + TILE_SIZE >= WINDOW_WIDTH - TILE_SIZE && character->y + TILE_SIZE >= WINDOW_HEIGHT - TILE_SIZE)) {
+    if ((character->x <=  characterStep && character->y <=  characterStep) ||
+        (character->x +  characterStep >= WINDOW_WIDTH -  characterStep && character->y <=  characterStep) ||
+        (character->x <=  characterStep && character->y +  characterStep >= WINDOW_HEIGHT -  characterStep) ||
+        (character->x +  characterStep >= WINDOW_WIDTH -  characterStep && character->y +  characterStep >= WINDOW_HEIGHT -  characterStep)) {
 
         int randomDirection = generateRandomNumber(4);
+        characterHandleMovement(character, randomDirection, characterStep);
 
-        switch (randomDirection) {
-            case 0:
-                if (character->x >= TILE_SIZE) {
-                    character->x -= TILE_SIZE;
-                }
-                break;
-            case 1:
-                if (character->x + TILE_SIZE < WINDOW_WIDTH) {
-                    character->x += TILE_SIZE;
-                }
-                break;
-            case 2:
-                if (character->y >= TILE_SIZE) {
-                    character->y -= TILE_SIZE;
-                }
-                break;
-            case 3:
-                if (character->y + TILE_SIZE < WINDOW_HEIGHT) {
-                    character->y += TILE_SIZE;
-                }
-                break;
-            default:
-                break;
-        }
     } else {
         // Choisir la direction opposée
         if (abs(deltaX) > abs(deltaY)) {
             // Se déplacer horizontalement
-            if (deltaX > 0 && character->x >= TILE_SIZE) {
-                character->x -= TILE_SIZE;
-            } else if (deltaX < 0 && character->x + TILE_SIZE < WINDOW_WIDTH - TILE_SIZE) {
-                character->x += TILE_SIZE;
+            if (deltaX > 0 && character->x >=  characterStep) {
+                characterHandleMovement(character, 3, characterStep);
+            } else if (deltaX < 0 && character->x +  characterStep < WINDOW_WIDTH -  characterStep) {
+                characterHandleMovement(character, 1, characterStep);
             }
         } else {
             // Se déplacer verticalement
-            if (deltaY > 0 && character->y >= TILE_SIZE) {
-                character->y -= TILE_SIZE;
-            } else if (deltaY < 0 && character->y + TILE_SIZE < WINDOW_HEIGHT - TILE_SIZE) {
-                character->y += TILE_SIZE;
+            if (deltaY > 0 && character->y >=  characterStep) {
+                characterHandleMovement(character, 0, characterStep);
+            } else if (deltaY < 0 && character->y +  characterStep < WINDOW_HEIGHT -  characterStep) {
+                characterHandleMovement(character, 2, characterStep);
             }
         }
     }
@@ -141,21 +160,21 @@ void characterMovementFighter(Character *character) {
     int deltaY = mainCharacterPosY - character->y;
 
     // S'assurer que l'ennemi est à plus d'une case de distance du personnage
-    if (abs(deltaX) > TILE_SIZE || abs(deltaY) > TILE_SIZE) {
+    if (abs(deltaX) >  character->nbstep || abs(deltaY) >  character->nbstep) {
         // Choisir la direction en fonction des différences
         if (abs(deltaX) > abs(deltaY)) {
             // Se déplacer horizontalement
-            if (deltaX > 0 && character->x + TILE_SIZE < WINDOW_WIDTH - TILE_SIZE) {
-                character->x += TILE_SIZE;
-            } else if (deltaX < 0 && character->x >= TILE_SIZE) {
-                character->x -= TILE_SIZE;
+            if (deltaX > 0 && character->x +  character->nbstep < WINDOW_WIDTH -  character->nbstep) {
+                characterHandleMovement(character, 1, character->nbstep);
+            } else if (deltaX < 0 && character->x >=  character->nbstep) {
+                characterHandleMovement(character, 3, character->nbstep);
             }
         } else {
             // Se déplacer verticalement
-            if (deltaY > 0 && character->y + TILE_SIZE < WINDOW_HEIGHT - TILE_SIZE) {
-                character->y += TILE_SIZE;
-            } else if (deltaY < 0 && character->y >= TILE_SIZE) {
-                character->y -= TILE_SIZE;
+            if (deltaY > 0 && character->y +  character->nbstep < WINDOW_HEIGHT -  character->nbstep) {
+                characterHandleMovement(character, 2, character->nbstep);
+            } else if (deltaY < 0 && character->y >=  character->nbstep) {
+                characterHandleMovement(character, 0, character->nbstep);
             }
         }
     }
@@ -164,30 +183,15 @@ void characterMovementFighter(Character *character) {
 void characterMovementLazy(Character *character) {
 
     int randomMovement = generateRandomNumber(12);
-
-    switch (randomMovement) {
-        case 0:
-            if (character->x < TILE_SIZE) break;
-            character->x -= TILE_SIZE;
-            break;
-        case 1:
-            if (character->x + TILE_SIZE >= WINDOW_WIDTH) break;
-            character->x += TILE_SIZE;
-            break;
-        case 2:
-            if (character->y < TILE_SIZE) break;
-            character->y -= TILE_SIZE;
-            break;
-        case 3:
-            if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
-            character->y += TILE_SIZE;
-            break;
-    }
+    characterHandleMovement(character, randomMovement, character->nbstep);
 
 }
 
 int manualMovement(Character *character) {
+
     SDL_Event event;
+    int characterStep = getCharacterSteps(character) * TILE_SIZE;
+
     while (SDL_PollEvent(&event) != 0) {
         if (event.type == SDL_QUIT) {
             exit(0);
@@ -195,21 +199,20 @@ int manualMovement(Character *character) {
             printf("\nDéplacement Joueur");
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
-                    if (character->x < TILE_SIZE) break;
-                    character->x -= TILE_SIZE;
+                    characterHandleMovement(character, 3, characterStep);
                     return 1;
                 case SDLK_RIGHT:
-                    if (character->x + TILE_SIZE >= WINDOW_WIDTH) break;
-                    character->x += TILE_SIZE;
+                    characterHandleMovement(character, 1, characterStep);
                     return 1;
                 case SDLK_UP:
-                    if (character->y < TILE_SIZE) break;
-                    character->y -= TILE_SIZE;
+                    characterHandleMovement(character, 0, characterStep);
                     return 1;
                 case SDLK_DOWN:
-                    if (character->y + TILE_SIZE >= WINDOW_HEIGHT) break;
-                    character->y += TILE_SIZE;
+                    characterHandleMovement(character, 2, characterStep);
                     return 1;  
+                case SDLK_SPACE:
+                    characterSpecialMovementDash(character);
+                    return 1;
             }
             return 0;
         }
@@ -217,15 +220,37 @@ int manualMovement(Character *character) {
     }
 }
 
-void characterMovement(Character *character) {
+void characterSpecialMovementDash(Character *character) {
+
+    int dashLength = TILE_SIZE * getCharacterSteps(character) * 2;
+
+    switch (character->direction)
+    {
+    case 0:
+        character->y -= dashLength;
+        break;
+    case 1:
+        character->x += dashLength;
+        break;
+    case 2:
+        character->y += dashLength;
+        break;
+    case 3:
+        character->x -= dashLength;
+        break;
+    
+    default:
+        break;
+    }
+}
+
+void characterMovementManager(Character *character) {
     Character mainCharacter = getMainCharacter();
 
     if(character->vitality <= 0) { return; }
 
     int mainCharacterPosX = getCharacterPositionX(&mainCharacter);
     int mainCharacterPosY = getCharacterPositionY(&mainCharacter);
-
-    return;
 
     switch (character->archetype) {
         case 0:
@@ -243,8 +268,6 @@ void characterMovement(Character *character) {
         case 4:
             characterMovementFighter(character);
             break;
-    }
-    
+    } 
     return;
 }
-

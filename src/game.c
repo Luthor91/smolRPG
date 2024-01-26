@@ -2,6 +2,7 @@
 #include "../header/fightDraw.h"
 #include "../header/game.h"
 #include "../header/drawBackground.h"
+#include "../header/characterMovement.h"
 
 Character enemies[MAX_ENEMIES];
 Character enemyFighted;
@@ -30,12 +31,12 @@ void spawnEnemy() {
     size_t i = 0;
     for (i = 0; i <= 3; i++) {
         char spritePath[50];
-        snprintf(spritePath, sizeof(spritePath), "assets/ennemies/enemy_%d.png", i);
-        Character *enemy = initCharacter(spritePath, renderer, 0);
-
+        Character *enemy = initCharacter("assets/ennemies/enemy_base.png", renderer, 0);
         addEnemy(*enemy);
         initCharacterPosition(&enemies[i], 32+i*2*32, 32+i*2*32);
         initCharacterSize(&enemies[i], 32+i*32, 32+i*32);
+        initCharacterStep(&enemies[i]);
+        modifyCharacterColor(&enemies[i], 1+10*i, 1+20*i, 1+30*i);
     }
     numEnemies = i;
 }
@@ -72,7 +73,7 @@ void handleMovements() {
     int isMoved = manualMovement(mainCharacter);
     if (isMoved == 1) { 
         for (int i = 0; i < numEnemies; i++) {
-            characterMovement(&enemies[i]);
+            characterMovementManager(&enemies[i]);
         }
         drawGame();
     }

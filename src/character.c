@@ -55,32 +55,50 @@ void initCharacterArchetype(Character *character, int archetype) {
     character->archetype = archetype;
 }
 
+void initCharacterColor(Character *character) {
+    SDL_SetTextureColorMod(character->characterTexture[character->currentSpriteIndex], 0, 0, 0);
+}
+
+void initCharacterStep(Character *character) {
+    int step = character->width/TILE_SIZE;
+    character->nbstep = step;
+}
+
+void modifyCharacterStep(Character *character, int step) {
+    character->nbstep = step;
+}
+
+void modifyCharacterColor(Character *character, int r, int g, int b) {
+    SDL_SetTextureColorMod(character->characterTexture[character->currentSpriteIndex], r, g, b);
+}
+
 Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype) {
     
-    Character *charac = (Character*)calloc(1, sizeof(Character));
+    Character *character = (Character*)calloc(1, sizeof(Character));
 
-    if (charac == NULL) {
+    if (character == NULL) {
         fprintf(stderr, "Erreur : échec de l'allocation de mémoire pour Character.\n");
         exit(EXIT_FAILURE);
     }
 
     for (int i = 0; i < MAX_SPRITES; i++) {
-        charac->spritePaths[i] = NULL;
+        character->spritePaths[i] = NULL;
     }
 
-    if (filePath && filePath[0] != '\0') { addCharacterSprite(charac, filePath); } 
-    else { addCharacterSprite(charac, "assets/characters/main_character/default_idle_1.png"); }
+    if (filePath && filePath[0] != '\0') { addCharacterSprite(character, filePath); } 
+    else { addCharacterSprite(character, "assets/characters/main_character/default_idle_1.png"); }
 
-    charac->renderer = renderer;
+    character->renderer = renderer;
 
 
-    initCharacterPosition(charac, 0, 0);
-    initCharacterSize(charac, 32, 32);
-    initCharacterStats(charac, 100, 10, 5);
-    initCharacterArchetype(charac, archetype);
-    initCharacterTexture(charac);
+    initCharacterPosition(character, 0, 0);
+    initCharacterSize(character, 32, 32);
+    initCharacterStats(character, 100, 10, 5);
+    initCharacterArchetype(character, archetype);
+    initCharacterTexture(character);
+    initCharacterStep(character);
 
-    return charac;
+    return character;
 }
 
 void modifyCharacterSize(Character *character, int width, int height) {
@@ -119,6 +137,10 @@ int getCharacterPositionX(Character *character) {
 
 int getCharacterPositionY(Character *character) {
     return character->y;
+}
+
+int getCharacterSteps(Character *character) {
+    return character->nbstep;
 }
 
 // Ajouter un sprite au tableau de chemins de fichiers
@@ -171,11 +193,11 @@ void printCharacter(Character *character) {
     );
 }
 
-void destroyCharacter(Character *charac) {
+void destroyCharacter(Character *character) {
     for (size_t i = 0; i < MAX_SPRITES; i++) {
-        SDL_DestroyTexture(charac->characterTexture[i]);
+        SDL_DestroyTexture(character->characterTexture[i]);
     }
-    free(charac);
+    free(character);
 }
 
 int isCollidingAgainstEnemies(int posx, int posy) {
@@ -195,8 +217,6 @@ int isCollidingAgainstEnemies(int posx, int posy) {
     }
     return 0;
 }
-
-            
 
 Character* getCollidingEnemy(Character* player, int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {

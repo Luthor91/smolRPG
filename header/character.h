@@ -24,89 +24,58 @@ typedef struct {
     int defense;
     int archetype;
     int index;
+    int direction;
+    int nbstep;
 } Character;
 
 extern Character enemies[MAX_ENEMIES];
 extern Character enemyFighted;
 extern Character *mainCharacter;
 
-extern int numEnemies; 
+extern int numEnemies;
 
-
-// Initialiser la texture du personnage
 void initCharacterTexture(Character *character);
-
-// Initialiser les statistiques du personnage
 void initCharacterStats(Character *character, int vitality, int strength, int defense);
-
-// Initialiser la taille du personnage
 void initCharacterSize(Character *character, int width, int height);
-
-// Initialiser la position du personnage
 void initCharacterPosition(Character *character, int posx, int posy);
-
-// Initialiser l'archétype du personnage
 void initCharacterArchetype(Character *character, int archetype);
+void initCharacterColor(Character *character);
+void initCharacterStep(Character *character);
 
-// Initialiser le personnage avec des valeurs par défaut
 Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype);
 
-// Modifier la taille du personnage
+void modifyCharacterStep(Character *character, int step);
 void modifyCharacterCharacterSize(Character *character, int width, int height);
-
-// Modifier la position du personnage
 void modifyCharacterCharacterPosition(Character *character, int x, int y);
-
-// Modifier la vitalité du personnage
 void modifyCharacterVitality(Character *character, int vitality);
-
-// Modifier la force du personnage
 void modifyCharacterStrength(Character *character, int strength);
-
-// Modifier la défense du personnage
 void modifyCharacterDefense(Character *character, int defense);
-
-// Modifier l'archétype du personnage
 void modifyCharacterArchetype(Character *character, int archetype);
-
-// Obtenir le personnage
-Character getMainCharacter();
-int getCharacterPositionY(Character *character);
-int getCharacterPositionX(Character *character);
-int isCollidingAgainstEnemies(int posx, int posy);
-Character* getCollidingEnemy(Character* player, int posx, int posy);
-// Ajouter un sprite au tableau de chemins de fichiers
-void addCharacterSprite(Character *character, const char *spritePath);
-
-void addEnemy(Character newEnemy);
-void removeEnemy(int index);
-
-// Changer le sprite actuel en utilisant l'indice fourni
+void modifyCharacterColor(Character *character, int r, int g, int b);
 void changeCharacterCurrentSprite(Character *character, int index);
 
-// Mouvement aléatoire du personnage
-void characterMovementRandom(Character *character);
+Character getMainCharacter();
+void printCharacter(Character *character);
+void addCharacterSprite(Character *character, const char *spritePath);
+void addEnemy(Character newEnemy);
+void removeEnemy(int index);
+void destroyCharacter(Character *character);
 
-// Mouvement du personnage en restant près du bord
-void characterMovementBorder(Character *character);
-
-// Mouvement du personnage pour fuir
-void characterMovementFugitive(Character *character);
-
-// Mouvement du personnage comme un combattant
-void characterMovementFighter(Character *character);
-
-// Mouvement paresseux du personnage
-void characterMovementLazy(Character *character);
-
-// Mouvement manuel du personnage
+// MOVEMENT HANDLER
 int manualMovement(Character *character);
-
-// Mouvement général du personnage
 void characterMovement(Character *character);
 
-void printCharacter(Character *character);
-// Détruire la texture du personnage
-void destroyCharacter(Character *character);
+void characterMovementRandom(Character *character);
+void characterMovementBorder(Character *character);
+void characterMovementFugitive(Character *character);
+void characterMovementFighter(Character *character);
+void characterMovementLazy(Character *character);
+
+int getCharacterPositionY(Character *character);
+int getCharacterPositionX(Character *character);
+int getCharacterSteps(Character *character);
+int isCollidingAgainstEnemies(int posx, int posy);
+
+Character* getCollidingEnemy(Character* player, int posx, int posy);
 
 #endif

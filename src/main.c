@@ -2,6 +2,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "../header/game.h"
 
@@ -15,6 +16,7 @@ void handleSignal(int sig) {
 }
 
 int main() {
+    srand((unsigned int)time(NULL));
     initSDL();
     initGame();
 
