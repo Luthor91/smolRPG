@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "../header/character.h"
+#include "../header/obstacle.h"
 #include "../header/drawBackground.h"  // Assurez-vous d'inclure le fichier d'en-tête pour drawBackground
 #include "../header/fightDraw.h"
 
@@ -33,7 +34,9 @@ void handleEvents();
 void handleFightClick(int mouseX, int mouseY);
 void handleMovement();
 void handleEnemyCollision();
+void spawnPlayer();
 void spawnEnemy();
+void spawnObstacle();
 void renderEnemy(SDL_Renderer *renderer);
 
 void initSDL();

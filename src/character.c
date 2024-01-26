@@ -3,6 +3,7 @@
 #include "../header/character.h"
 #include "../header/characterMovement.h"
 #include "../header/game.h"
+#include "../header/obstacle.h"
 #include "../header/fight.h"
 #include <stdio.h>
 
@@ -228,6 +229,41 @@ Character* getCollidingEnemy(Character* player, int posx, int posy) {
                 ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
             ) {
                 return &enemies[i];
+            }
+        }
+    }
+    return 0;
+}
+
+
+int isCollidingAgainstObstacles(int posx, int posy) {
+    for (size_t i = 0; i < numObstacles; i++) {
+        for (size_t j = 0; j < obstacles[i].width/TILE_SIZE; j++)
+        {
+            if (
+                ((posx >= (obstacles[i].x + TILE_SIZE * j) ) && (posx < (obstacles[i].x + obstacles[i].width)))
+                &&
+                ((posy >= obstacles[i].y ) && (posy < obstacles[i].y + obstacles[i].height))
+            ) {
+                printf("\nCollision avec un obstacle");
+                return 1;
+            }
+        }
+        
+    }
+    return 0;
+}
+
+Obstacle* getCollidingObstacle(Character* player, int posx, int posy) {
+    for (size_t i = 0; i < numObstacles; i++) {
+        for (size_t j = 0; j < obstacles[i].width/32; j++)
+        {
+            if (
+                ((posx >= (obstacles[i].x * j) ) && (posx < (obstacles[i].x * j + obstacles[i].width)))
+                &&
+                ((posy >= obstacles[i].y ) && (posy < obstacles[i].y + obstacles[i].height))
+            ) {
+                return &obstacles[i];
             }
         }
     }

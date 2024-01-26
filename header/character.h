@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "../header/obstacle.h"
 
 #define MAX_SPRITES 10
 #define CHARACTER_HEIGHT 32
@@ -74,8 +75,11 @@ void characterMovementLazy(Character *character);
 int getCharacterPositionY(Character *character);
 int getCharacterPositionX(Character *character);
 int getCharacterSteps(Character *character);
-int isCollidingAgainstEnemies(int posx, int posy);
 
+int isCollidingAgainstEnemies(int posx, int posy);
 Character* getCollidingEnemy(Character* player, int posx, int posy);
 
+int isCollidingAgainstObstacles(int posx, int posy);
+Obstacle* getCollidingObstacle(Character* player, int posx, int posy);
+ 
 #endif

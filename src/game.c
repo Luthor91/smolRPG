@@ -1,5 +1,6 @@
 // game.c
 #include "../header/fightDraw.h"
+#include "../header/obstacle.h"
 #include "../header/game.h"
 #include "../header/drawBackground.h"
 #include "../header/characterMovement.h"
@@ -8,6 +9,8 @@ Character enemies[MAX_ENEMIES];
 Character enemyFighted;
 Character *mainCharacter;
 
+Obstacle obstacles[MAX_OBSTACLES];
+
 SDL_Texture *backgroundTexture;
 SDL_Rect backgroundRect;
 SDL_Window *window;
@@ -15,6 +18,7 @@ SDL_Renderer *renderer;
 SDL_Texture* backgroundTextures[GRID_ROWS][GRID_COLS];  // Déclarez ici
 
 int numEnemies = 0;
+int numObstacles = 0;
 int isGameRunning = 1;
 int isInFight = 0;
 
@@ -36,9 +40,30 @@ void spawnEnemy() {
         initCharacterPosition(&enemies[i], 32+i*2*32, 32+i*2*32);
         initCharacterSize(&enemies[i], 32+i*32, 32+i*32);
         initCharacterStep(&enemies[i]);
-        modifyCharacterColor(&enemies[i], 1+10*i, 1+20*i, 1+30*i);
+        modifyCharacterColor(&enemies[i], 255 - (1+10*i), 255 - (1+20*i), 255 - (1+40*i));
     }
     numEnemies = i;
+}
+
+void spawnObstacle() {
+    size_t i = 0;
+    for (i = 0; i <= 3; i++) {
+        char spritePath[50];
+        Obstacle *obstacle = initObstacle("assets/obstacles/obstacle_base.png", renderer, 0);
+        addObstacle(*obstacle);
+        initObstaclePosition(&obstacles[i], (32*8) + 128 * i, 128 * i);
+        initObstacleSize(&obstacles[i], 32, 32);
+        modifyObstacleColor(&obstacles[i], 0, 0, 0);
+        printObstacle(&obstacles[i]);
+    }
+    numObstacles = i;
+}
+
+void spawnPlayer() {
+    mainCharacter = initCharacter("assets/characters/main_character/default_idle_1.png", renderer, -1);
+    initCharacterPosition(mainCharacter, 0, 0);
+    initCharacterSize(mainCharacter, 32, 32);
+    printCharacter(mainCharacter);
 }
 
 void initGame() {
@@ -62,8 +87,9 @@ void initGame() {
     initBackground(&backgroundRect);
 
     fillBackgroundTextures(groundTexture, backgroundTextures);
-    mainCharacter = initCharacter("assets/characters/main_character/default_idle_1.png", renderer, -1);
-    initCharacterPosition(mainCharacter, 512, 512);
+
+    spawnPlayer();
+    spawnObstacle(); 
     spawnEnemy();
     drawGame();
 
@@ -116,6 +142,18 @@ void renderEnemy(SDL_Renderer *renderer) {
     }
 }
 
+void renderObstacle(SDL_Renderer *renderer) {
+    for (int i = 0; i < numObstacles; i++) {
+        SDL_Rect obstacleRect = {
+            .x = obstacles[i].x,
+            .y = obstacles[i].y,
+            .w = obstacles[i].width,
+            .h = obstacles[i].height
+        };
+        SDL_RenderCopy(renderer, obstacles[i].obstacleTexture[obstacles[i].currentSpriteIndex], NULL, &obstacleRect);
+    }
+}
+
 void drawGame() {
 
     SDL_RenderClear(renderer);  // Effacez le rendu au début de chaque itération
@@ -126,6 +164,7 @@ void drawGame() {
     SDL_RenderCopy(renderer, mainCharacter->characterTexture[mainCharacter->currentSpriteIndex], NULL, &characterRect);
 
     renderEnemy(renderer);
+    renderObstacle(renderer);
 
     SDL_RenderPresent(renderer);  // Mettez à jour l'écran une seule fois à la fin de chaque itération
     
@@ -162,7 +201,6 @@ void handleEvents() {
         }
     }
 }
-
 
 void freeResources() {
     if (backgroundTexture) {

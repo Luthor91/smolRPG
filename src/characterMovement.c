@@ -6,22 +6,34 @@
 void characterHandleMovement(Character *character, int direction, int distance) {
     
     character->direction = direction;
-    
+
     switch (direction) {
         case 0:
             if (character->y < distance) break;
+            if (isCollidingAgainstObstacles(character->y - distance, character->x) == 1) {
+                break;
+            }
             character->y -= distance;
             break;
         case 1:
             if (character->x + distance >= WINDOW_WIDTH) break;
+            if (isCollidingAgainstObstacles(character->y, character->x + distance) == 1) {
+                break;
+            }
             character->x += distance;
             break;
         case 2:
             if (character->y + distance >= WINDOW_HEIGHT) break;
+            if (isCollidingAgainstObstacles(character->y + distance, character->x) == 1) {
+                break;
+            }
             character->y += distance;
             break;
         case 3:
             if (character->x < distance) break;
+            if (isCollidingAgainstObstacles(character->y, character->x - distance) == 1) {
+                break;
+            }
             character->x -= distance;
             break;
         default:
@@ -196,7 +208,7 @@ int manualMovement(Character *character) {
         if (event.type == SDL_QUIT) {
             exit(0);
         } else if (event.type == SDL_KEYDOWN) {
-            printf("\nDéplacement Joueur");
+            printf("\nDéplacement Joueur : %d;%d", character->x, character->y);
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
                     characterHandleMovement(character, 3, characterStep);
