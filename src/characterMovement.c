@@ -223,25 +223,8 @@ int manualMovement(Character *character) {
 void characterSpecialMovementDash(Character *character) {
 
     int dashLength = TILE_SIZE * getCharacterSteps(character) * 2;
+    characterHandleMovement(character, character->direction, dashLength);
 
-    switch (character->direction)
-    {
-    case 0:
-        character->y -= dashLength;
-        break;
-    case 1:
-        character->x += dashLength;
-        break;
-    case 2:
-        character->y += dashLength;
-        break;
-    case 3:
-        character->x -= dashLength;
-        break;
-    
-    default:
-        break;
-    }
 }
 
 void characterMovementManager(Character *character) {
