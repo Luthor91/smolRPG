@@ -3,6 +3,7 @@
 
 #include "../header/characterMovement.h"
 
+
 void characterHandleMovement(Character *character, int direction, int distance) {
     
     character->direction = direction;

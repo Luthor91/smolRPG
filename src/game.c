@@ -37,7 +37,7 @@ void spawnEnemy() {
         char spritePath[50];
         Character *enemy = initCharacter("assets/ennemies/enemy_base.png", renderer, 0);
         addEnemy(*enemy);
-        initCharacterPosition(&enemies[i], 32+i*2*32, 32+i*2*32);
+        initCharacterPosition(&enemies[i], 32+i*2*64, 32+i*2*64);
         initCharacterSize(&enemies[i], 32+i*32, 32+i*32);
         initCharacterStep(&enemies[i]);
         modifyCharacterColor(&enemies[i], 255 - (1+10*i), 255 - (1+20*i), 255 - (1+40*i));
