@@ -72,7 +72,6 @@ Obstacle *initObstacle(const char *filePath, SDL_Renderer *renderer, int type) {
 
     obstacle->renderer = renderer;
 
-
     initObstaclePosition(obstacle, 0, 0);
     initObstacleSize(obstacle, 32, 32);
     initObstacleType(obstacle, type);
@@ -118,10 +117,10 @@ void changeObstacleCurrentSprite(Obstacle *obstacle, int index) {
 }
 
 // Ajoutez un ennemi à la liste
-void addObstacle(Obstacle newObject) {
+void addObstacle(Obstacle newObstacle) {
     if (numObstacles < MAX_OBSTACLES) {
-        newObject.index = numObstacles;
-        obstacles[numObstacles] = newObject;
+        newObstacle.index = numObstacles;
+        obstacles[numObstacles] = newObstacle;
         numObstacles++;
     } else {
         fprintf(stderr, "Impossible d'ajouter plus d'obstacle. Tableau plein.\n");
@@ -129,7 +128,7 @@ void addObstacle(Obstacle newObject) {
 }
 
 // Retirez un ennemi de la liste en fonction de l'indice
-void removeObject(int index) {
+void removeObstacle(int index) {
     if (index >= 0 && index < numObstacles) {
         
         destroyObstacle(&obstacles[index]);

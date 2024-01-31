@@ -37,7 +37,7 @@ void spawnEnemy() {
         char spritePath[50];
         Character *enemy = initCharacter("assets/ennemies/enemy_base.png", renderer, 0);
         addEnemy(*enemy);
-        initCharacterPosition(&enemies[i], 32+i*2*64, 32+i*2*64);
+        initCharacterPosition(&enemies[i], 64+i*2*64, 32+i*2*64);
         initCharacterSize(&enemies[i], 32+i*32, 32+i*32);
         initCharacterStep(&enemies[i]);
         modifyCharacterColor(&enemies[i], 255 - (1+10*i), 255 - (1+20*i), 255 - (1+40*i));
@@ -51,7 +51,7 @@ void spawnObstacle() {
         char spritePath[50];
         Obstacle *obstacle = initObstacle("assets/obstacles/obstacle_base.png", renderer, 0);
         addObstacle(*obstacle);
-        initObstaclePosition(&obstacles[i], 32*8+128*i, 64+128*i);
+        initObstaclePosition(&obstacles[i], 64*3+128*i, 64+128*i);
         initObstacleSize(&obstacles[i], 32, 32);
         modifyObstacleColor(&obstacles[i], 0, 0, 0);
         printObstacle(&obstacles[i]);
@@ -119,7 +119,6 @@ void mainLoop() {
   
     while (isGameRunning == 1) {
         if (isInFight == 1) {
-            
             //handleEvents();
             //drawFightInterface(renderer, mainCharacter, &enemyFighted);
             isInFight = 0;

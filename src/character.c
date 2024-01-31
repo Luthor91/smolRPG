@@ -95,7 +95,6 @@ Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int arche
 
     character->renderer = renderer;
 
-
     initCharacterPosition(character, 0, 0);
     initCharacterSize(character, 32, 32);
     initCharacterStats(character, 100, 10, 5);
@@ -211,15 +210,13 @@ int isCollidingAgainstEnemies(int posx, int posy) {
         for (size_t j = 0; j < enemies[i].width/TILE_SIZE; j++)
         {
             if (
-                ((posx >= (enemies[i].x + TILE_SIZE * j) ) && (posx < (enemies[i].x + enemies[i].width)))
+                ((posx >= (enemies[i].x * j) ) && (posx < (enemies[i].x * j + enemies[i].width)))
                 &&
                 ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
             ) {
-                printf("\nCollision avec un enemi");
                 return 1;
             }
         }
-        
     }
     return 0;
 }
@@ -233,6 +230,7 @@ Character* getCollidingEnemy(Character* player, int posx, int posy) {
                 &&
                 ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
             ) {
+                printf("\nCollision avec un enemi");
                 return &enemies[i];
             }
         }
