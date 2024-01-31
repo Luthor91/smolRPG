@@ -65,6 +65,10 @@ void initCharacterStep(Character *character) {
     character->nbstep = step;
 }
 
+void initCharacterDirection(Character *character) {
+    character->direction = 0;
+}
+
 void modifyCharacterStep(Character *character, int step) {
     character->nbstep = step;
 }
@@ -98,6 +102,7 @@ Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int arche
     initCharacterArchetype(character, archetype);
     initCharacterTexture(character);
     initCharacterStep(character);
+    initCharacterDirection(character);
 
     return character;
 }
@@ -235,7 +240,6 @@ Character* getCollidingEnemy(Character* player, int posx, int posy) {
     return 0;
 }
 
-
 int isCollidingAgainstObstacles(int posx, int posy) {
     for (size_t i = 0; i < numObstacles; i++) {
         for (size_t j = 0; j < obstacles[i].width/TILE_SIZE; j++)
@@ -249,7 +253,6 @@ int isCollidingAgainstObstacles(int posx, int posy) {
                 return 1;
             }
         }
-        
     }
     return 0;
 }

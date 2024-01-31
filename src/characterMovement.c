@@ -7,6 +7,7 @@
 void characterHandleMovement(Character *character, int direction, int distance) {
     
     character->direction = direction;
+    printf("\nDirection : %d", mainCharacter->direction);
 
     switch (direction) {
         case 0:
@@ -17,14 +18,14 @@ void characterHandleMovement(Character *character, int direction, int distance) 
             character->y -= distance;
             break;
         case 1:
-            if (character->x + distance >= WINDOW_WIDTH) break;
+            if (character->x + character->width + distance > WINDOW_WIDTH) break;
             if (isCollidingAgainstObstacles(character->y, character->x + distance) == 1) {
                 break;
             }
             character->x += distance;
             break;
         case 2:
-            if (character->y + distance >= WINDOW_HEIGHT) break;
+            if (character->y + character->height + distance > WINDOW_HEIGHT) break;
             if (isCollidingAgainstObstacles(character->y + distance, character->x) == 1) {
                 break;
             }
@@ -209,23 +210,21 @@ int manualMovement(Character *character) {
         if (event.type == SDL_QUIT) {
             exit(0);
         } else if (event.type == SDL_KEYDOWN) {
-            printf("\nDéplacement Joueur : %d;%d", character->x, character->y);
-            switch (event.key.keysym.sym) {
-                case SDLK_LEFT:
-                    characterHandleMovement(character, 3, characterStep);
-                    return 1;
-                case SDLK_RIGHT:
-                    characterHandleMovement(character, 1, characterStep);
-                    return 1;
-                case SDLK_UP:
-                    characterHandleMovement(character, 0, characterStep);
-                    return 1;
-                case SDLK_DOWN:
-                    characterHandleMovement(character, 2, characterStep);
-                    return 1;  
-                case SDLK_SPACE:
-                    characterSpecialMovementDash(character);
-                    return 1;
+            if(event.key.keysym.sym == SDLK_LEFT) {
+                characterHandleMovement(character, 3, characterStep);
+                return 1;
+            } else if(event.key.keysym.sym == SDLK_RIGHT) {
+                characterHandleMovement(character, 1, characterStep);
+                return 1;
+            } else if(event.key.keysym.sym == SDLK_UP) {
+                characterHandleMovement(character, 0, characterStep);
+                return 1;
+            } else if(event.key.keysym.sym == SDLK_DOWN) {
+                characterHandleMovement(character, 2, characterStep);
+                return 1;
+            } else if (event.key.keysym.sym == SDLK_SPACE) {
+                characterSpecialMovementDash(character);
+                return 1;
             }
             return 0;
         }

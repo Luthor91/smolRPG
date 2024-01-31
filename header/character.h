@@ -42,6 +42,7 @@ void initCharacterPosition(Character *character, int posx, int posy);
 void initCharacterArchetype(Character *character, int archetype);
 void initCharacterColor(Character *character);
 void initCharacterStep(Character *character);
+void initCharacterDirection(Character *character);
 
 Character *initCharacter(const char *filePath, SDL_Renderer *renderer, int archetype);
 

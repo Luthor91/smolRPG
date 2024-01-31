@@ -51,7 +51,7 @@ void spawnObstacle() {
         char spritePath[50];
         Obstacle *obstacle = initObstacle("assets/obstacles/obstacle_base.png", renderer, 0);
         addObstacle(*obstacle);
-        initObstaclePosition(&obstacles[i], (32*8) + 128 * i, 128 * i);
+        initObstaclePosition(&obstacles[i], 32*8+128*i, 64+128*i);
         initObstacleSize(&obstacles[i], 32, 32);
         modifyObstacleColor(&obstacles[i], 0, 0, 0);
         printObstacle(&obstacles[i]);
@@ -62,7 +62,7 @@ void spawnObstacle() {
 void spawnPlayer() {
     mainCharacter = initCharacter("assets/characters/main_character/default_idle_1.png", renderer, -1);
     initCharacterPosition(mainCharacter, 0, 0);
-    initCharacterSize(mainCharacter, 32, 32);
+    initCharacterSize(mainCharacter, 64, 64);
     printCharacter(mainCharacter);
 }
 
@@ -97,7 +97,9 @@ void initGame() {
 
 void handleMovements() {
     int isMoved = manualMovement(mainCharacter);
+    
     if (isMoved == 1) { 
+        printf("\nDéplacement Joueur : %d;%d", mainCharacter->x, mainCharacter->y);
         for (int i = 0; i < numEnemies; i++) {
             characterMovementManager(&enemies[i]);
         }
