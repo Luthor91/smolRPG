@@ -1,6 +1,5 @@
 // game.c
 #include "../header/fightDraw.h"
-#include "../header/obstacle.h"
 #include "../header/game.h"
 #include "../header/drawBackground.h"
 #include "../header/characterMovement.h"
@@ -34,7 +33,6 @@ void initSDL() {
 void spawnEnemy() {
     size_t i = 0;
     for (i = 0; i <= 3; i++) {
-        char spritePath[50];
         Character *enemy = initCharacter("assets/ennemies/enemy_base.png", renderer, 0);
         addEnemy(*enemy);
         initCharacterPosition(&enemies[i], 64+i*2*64, 32+i*2*64);
@@ -48,7 +46,6 @@ void spawnEnemy() {
 void spawnObstacle() {
     size_t i = 0;
     for (i = 0; i <= 3; i++) {
-        char spritePath[50];
         Obstacle *obstacle = initObstacle("assets/obstacles/obstacle_base.png", renderer, 0);
         addObstacle(*obstacle);
         initObstaclePosition(&obstacles[i], 64*3+128*i, 64+128*i);
