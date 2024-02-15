@@ -12,28 +12,28 @@ void characterHandleMovement(Character *character, int direction, int distance) 
     switch (direction) {
         case 0:
             if (character->y < distance) break;
-            if (isCollidingAgainstObstacles(character->y - distance, character->x) == 1) {
+            if (isCollidingAgainstObstacles(character->x, character->y - distance) == 1) {
                 break;
             }
             character->y -= distance;
             break;
         case 1:
             if (character->x + character->width + distance > WINDOW_WIDTH) break;
-            if (isCollidingAgainstObstacles(character->y, character->x + distance) == 1) {
+            if (isCollidingAgainstObstacles(character->x + distance, character->y) == 1) {
                 break;
             }
             character->x += distance;
             break;
         case 2:
             if (character->y + character->height + distance > WINDOW_HEIGHT) break;
-            if (isCollidingAgainstObstacles(character->y + distance, character->x) == 1) {
+            if (isCollidingAgainstObstacles(character->x, character->y + distance) == 1) {
                 break;
             }
             character->y += distance;
             break;
         case 3:
             if (character->x < distance) break;
-            if (isCollidingAgainstObstacles(character->y, character->x - distance) == 1) {
+            if (isCollidingAgainstObstacles(character->x - distance, character->y) == 1) {
                 break;
             }
             character->x -= distance;
