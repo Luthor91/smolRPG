@@ -30,7 +30,7 @@ typedef struct {
 } Character;
 
 extern Character enemies[MAX_ENEMIES];
-extern Character enemyFighted;
+extern Character *enemyFighted;
 extern Character *mainCharacter;
 
 extern int numEnemies;
@@ -60,7 +60,7 @@ Character getMainCharacter();
 void printCharacter(Character *character);
 void addCharacterSprite(Character *character, const char *spritePath);
 void addEnemy(Character newEnemy);
-void removeEnemy(int index);
+void removeEnemy(Character *character);
 void destroyCharacter(Character *character);
 
 // MOVEMENT HANDLER

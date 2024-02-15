@@ -240,6 +240,7 @@ void characterSpecialMovementDash(Character *character) {
 }
 
 void characterMovementManager(Character *character) {
+    return;
     Character mainCharacter = getMainCharacter();
 
     if(character->vitality <= 0) { return; }

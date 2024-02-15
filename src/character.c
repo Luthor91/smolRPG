@@ -117,7 +117,7 @@ void modifyCharacterPosition(Character *character, int x, int y) {
 }
 
 void modifyCharacterVitality(Character *character, int vitality) {
-    character->vitality = vitality;
+    character->vitality += vitality;
 }
 
 void modifyCharacterStrength(Character *character, int strength) {
@@ -174,10 +174,14 @@ void addEnemy(Character newEnemy) {
 }
 
 // Retirez un ennemi de la liste en fonction de l'indice
-void removeEnemy(int index) {
+void removeEnemy(Character *character) {
+
+    const int index = character->index;
+
     if (index >= 0 && index < numEnemies) {
         
-        destroyCharacter(&enemies[index]);
+        destroyCharacter(&enemies[character->index]);
+
         printf("Memory freed for enemy at index %d\n", index);
 
         // Déplacez les éléments suivants d'un indice vers le haut pour remplir l'emplacement supprimé
@@ -205,16 +209,26 @@ void destroyCharacter(Character *character) {
     free(character);
 }
 
+
 int isCollidingAgainstEnemies(int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
-        for (size_t j = 0; j < enemies[i].width/TILE_SIZE; j++)
-        {
-            if (
-                ((posx >= (enemies[i].x * j) ) && (posx < (enemies[i].x * j + enemies[i].width)))
-                &&
-                ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
-            ) {
-                return 1;
+        for (size_t j = 0; j < enemies[i].width/TILE_SIZE; j++) {
+            for (size_t k = 0; j < enemies[i].height/TILE_SIZE; k++) {
+                if ( 
+                    (posx == (enemies[i].x + j * TILE_SIZE ) )
+                    || (posy == (enemies[i].y + k * TILE_SIZE ) )
+                ) {
+                    return 1;
+                }
+                /*
+                if (
+                    ((posx >= (enemies[i].x + (TILE_SIZE * j) ) ) && (posx < (enemies[i].x + ( enemies[i].width * j ) )))
+                    &&
+                    ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
+                ) {
+                    return 1;
+                }
+                */
             }
         }
     }
@@ -223,15 +237,16 @@ int isCollidingAgainstEnemies(int posx, int posy) {
 
 Character* getCollidingEnemy(Character* player, int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
-        for (size_t j = 0; j < enemies[i].width/32; j++)
+        for (size_t j = 0; j < enemies[i].width/TILE_SIZE; j++)
         {
-            if (
-                ((posx >= (enemies[i].x * j) ) && (posx < (enemies[i].x * j + enemies[i].width)))
-                &&
-                ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
-            ) {
-                printf("\nCollision avec un enemi");
-                return &enemies[i];
+            for (size_t k = 0; j < enemies[i].height/TILE_SIZE; k++)
+            {
+                if ( 
+                    (posx == (enemies[i].x + j * TILE_SIZE ) )
+                    || (posy == (enemies[i].y + k * TILE_SIZE ) )
+                ) {
+                    return &enemies[i];
+                }
             }
         }
     }

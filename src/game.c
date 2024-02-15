@@ -5,7 +5,7 @@
 #include "../header/characterMovement.h"
 
 Character enemies[MAX_ENEMIES];
-Character enemyFighted;
+Character *enemyFighted;
 Character *mainCharacter;
 
 Obstacle obstacles[MAX_OBSTACLES];
@@ -98,6 +98,7 @@ void handleMovements() {
     if (isMoved == 1) { 
         printf("\nDéplacement Joueur : %d;%d", mainCharacter->x, mainCharacter->y);
         for (int i = 0; i < numEnemies; i++) {
+            printCharacter(&enemies[i]);
             characterMovementManager(&enemies[i]);
         }
         drawGame();
@@ -107,7 +108,8 @@ void handleMovements() {
 void handleEnemyCollision() {
     
     if (isCollidingAgainstEnemies(mainCharacter->x, mainCharacter->y) == 1) {
-        enemyFighted = *getCollidingEnemy(mainCharacter, mainCharacter->x, mainCharacter->y);
+        printf("enemy collided");
+        enemyFighted = getCollidingEnemy(mainCharacter, mainCharacter->x, mainCharacter->y);
         isInFight = 1;
     } 
 }
@@ -117,7 +119,7 @@ void mainLoop() {
     while (isGameRunning == 1) {
         if (isInFight == 1) {
             //handleEvents();
-            //drawFightInterface(renderer, mainCharacter, &enemyFighted);
+            drawFightInterface(renderer, mainCharacter, enemyFighted);
             isInFight = 0;
         } else {
             //handleEvents();
