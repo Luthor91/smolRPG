@@ -94,7 +94,6 @@ void initGame() {
 
 void handleMovements() {
     int isMoved = manualMovement(mainCharacter);
-    
     if (isMoved == 1) { 
         printf("\nDéplacement Joueur : %d;%d", mainCharacter->x, mainCharacter->y);
         for (int i = 0; i < numEnemies; i++) {
@@ -108,7 +107,6 @@ void handleMovements() {
 void handleEnemyCollision() {
     
     if (isCollidingAgainstEnemies(mainCharacter->x, mainCharacter->y) == 1) {
-        printf("enemy collided");
         enemyFighted = getCollidingEnemy(mainCharacter, mainCharacter->x, mainCharacter->y);
         isInFight = 1;
     } 

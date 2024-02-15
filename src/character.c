@@ -213,22 +213,13 @@ void destroyCharacter(Character *character) {
 int isCollidingAgainstEnemies(int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
         for (size_t j = 0; j < enemies[i].width/TILE_SIZE; j++) {
-            for (size_t k = 0; j < enemies[i].height/TILE_SIZE; k++) {
+            for (size_t k = 0; k < enemies[i].height/TILE_SIZE; k++) {
                 if ( 
                     (posx == (enemies[i].x + j * TILE_SIZE ) )
-                    || (posy == (enemies[i].y + k * TILE_SIZE ) )
+                    && (posy == (enemies[i].y + k * TILE_SIZE ) )
                 ) {
                     return 1;
                 }
-                /*
-                if (
-                    ((posx >= (enemies[i].x + (TILE_SIZE * j) ) ) && (posx < (enemies[i].x + ( enemies[i].width * j ) )))
-                    &&
-                    ((posy >= enemies[i].y ) && (posy < enemies[i].y + enemies[i].height))
-                ) {
-                    return 1;
-                }
-                */
             }
         }
     }
@@ -239,11 +230,11 @@ Character* getCollidingEnemy(Character* player, int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
         for (size_t j = 0; j < enemies[i].width/TILE_SIZE; j++)
         {
-            for (size_t k = 0; j < enemies[i].height/TILE_SIZE; k++)
+            for (size_t k = 0; k < enemies[i].height/TILE_SIZE; k++)
             {
                 if ( 
                     (posx == (enemies[i].x + j * TILE_SIZE ) )
-                    || (posy == (enemies[i].y + k * TILE_SIZE ) )
+                    && (posy == (enemies[i].y + k * TILE_SIZE ) )
                 ) {
                     return &enemies[i];
                 }
