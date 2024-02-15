@@ -61,7 +61,7 @@ void printCharacter(Character *character);
 void addCharacterSprite(Character *character, const char *spritePath);
 void addEnemy(Character newEnemy);
 void removeEnemy(Character *character);
-void destroyCharacter(Character *character);
+void reIndexEnemies();
 
 // MOVEMENT HANDLER
 int manualMovement(Character *character);

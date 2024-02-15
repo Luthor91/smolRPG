@@ -173,25 +173,16 @@ void addEnemy(Character newEnemy) {
     }
 }
 
-// Retirez un ennemi de la liste en fonction de l'indice
-void removeEnemy(Character *character) {
-
-    const int index = character->index;
-
-    if (index >= 0 && index < numEnemies) {
-        
-        destroyCharacter(&enemies[character->index]);
-
-        printf("Memory freed for enemy at index %d\n", index);
-
-        // Déplacez les éléments suivants d'un indice vers le haut pour remplir l'emplacement supprimé
-        for (int i = index; i < numEnemies - 1; i++) {
+void reIndexEnemies() {
+    for (int i = 0; i < numEnemies; i++) {
+        if(enemies[i].vitality <= 0) {
+            printf("\n deaded : %d", enemies[i].index);
             enemies[i] = enemies[i + 1];
+            // essayer de faire un free() ?
         }
-        numEnemies--;
-    } else {
-        fprintf(stderr, "Indice d'ennemi invalide.\n");
     }
+    numEnemies--;
+
 }
 
 void printCharacter(Character *character) {
