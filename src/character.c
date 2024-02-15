@@ -174,10 +174,12 @@ void addEnemy(Character newEnemy) {
 }
 
 void reIndexEnemies() {
-    for (int i = 0; i < numEnemies; i++) {
+    for (int i = 0; i < numEnemies - 1; i++) {
         if(enemies[i].vitality <= 0) {
             printf("\n deaded : %d", enemies[i].index);
-            enemies[i] = enemies[i + 1];
+            for (int j = i; j < numEnemies - 1; j++) {
+                enemies[j] = enemies[j + 1];
+            } 
             // essayer de faire un free() ?
         }
     }
