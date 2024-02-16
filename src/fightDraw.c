@@ -25,6 +25,11 @@ void drawFightInterface(SDL_Renderer *renderer, Character *character, Character 
     SDL_DestroyTexture(attackButtonTexture);
 }
 
+void createBackgroundTexture(SDL_Renderer *renderer, SDL_Texture **backgroundTexture) {
+    // Code pour créer la texture de la barre de santé
+    // Utilisez SDL functions pour dessiner la barre de santé
+    // Assurez-vous de libérer la mémoire appropriée à la fin
+}
 
 void createHealthBarTexture(SDL_Renderer *renderer, SDL_Texture **healthBarTexture) {
     // Code pour créer la texture de la barre de santé

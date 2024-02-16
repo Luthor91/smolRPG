@@ -202,7 +202,6 @@ void destroyCharacter(Character *character) {
     free(character);
 }
 
-
 int isCollidingAgainstEnemies(int posx, int posy) {
     for (size_t i = 0; i < numEnemies; i++) {
         for (size_t j = 0; j < enemies[i].width/TILE_SIZE; j++) {
@@ -238,16 +237,19 @@ Character* getCollidingEnemy(Character* player, int posx, int posy) {
 }
 
 int isCollidingAgainstObstacles(int posx, int posy) {
+
     for (size_t i = 0; i < numObstacles; i++) {
         for (size_t j = 0; j < obstacles[i].width/TILE_SIZE; j++)
         {
-            if (
-                ((posx >= (obstacles[i].x + TILE_SIZE * j) ) && (posx < (obstacles[i].x + obstacles[i].width)))
-                &&
-                ((posy >= obstacles[i].y ) && (posy < obstacles[i].y + obstacles[i].height))
-            ) {
-                printf("\nCollision avec un obstacle");
-                return 1;
+            for (size_t k = 0; k < obstacles[i].height/TILE_SIZE; k++)
+            {
+                if ( 
+                    (posx == (obstacles[i].x + j * TILE_SIZE ) )
+                    && (posy == (obstacles[i].y + k * TILE_SIZE ) )
+                ) {   
+                    printf("\nCollision avec un obstacle");
+                    return 1;
+                }   
             }
         }
     }
@@ -255,15 +257,18 @@ int isCollidingAgainstObstacles(int posx, int posy) {
 }
 
 Obstacle* getCollidingObstacle(Character* player, int posx, int posy) {
+
     for (size_t i = 0; i < numObstacles; i++) {
-        for (size_t j = 0; j < obstacles[i].width/32; j++)
+        for (size_t j = 0; j < obstacles[i].width/TILE_SIZE; j++)
         {
-            if (
-                ((posx >= (obstacles[i].x * j) ) && (posx < (obstacles[i].x * j + obstacles[i].width)))
-                &&
-                ((posy >= obstacles[i].y ) && (posy < obstacles[i].y + obstacles[i].height))
-            ) {
-                return &obstacles[i];
+            for (size_t k = 0; k < obstacles[i].height/TILE_SIZE; k++)
+            {
+                if ( 
+                    (posx == (obstacles[i].x + j * TILE_SIZE ) )
+                    && (posy == (obstacles[i].y + k * TILE_SIZE ) )
+                ) {   
+                    return &obstacles[i];
+                }   
             }
         }
     }

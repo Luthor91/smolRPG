@@ -7,6 +7,7 @@
 
 // Déclaration des fonctions
 void drawFightInterface(SDL_Renderer *renderer, Character *character, Character *enemy);
+void createBackgroundTexture(SDL_Renderer *renderer, SDL_Texture **healthBarTexture);
 void createHealthBarTexture(SDL_Renderer *renderer, SDL_Texture **healthBarTexture);
 void createAttackButtonTexture(SDL_Renderer *renderer, SDL_Texture **attackButtonTexture);
 // Ajoutez d'autres fonctions pour créer des textures supplémentaires
