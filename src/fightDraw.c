@@ -1,34 +1,64 @@
 // fightDraw.c
 #include "../header/fightDraw.h"
+#include "../header/drawBackground.h"
 #include "../header/fight.h"
 #include "../header/game.h"
 #include "../header/character.h"
 
 void drawFightInterface(SDL_Renderer *renderer, Character *character, Character *enemy) {
+    while (isInFight == 1) {
+        printf("\nCréation interface combat");
+        SDL_RenderClear(renderer);
+        
+        // Charger la texture du background
+        SDL_Texture *backgroundTexture = IMG_LoadTexture(renderer, "assets/interfaces/game.png");
+        SDL_Texture *characterBacksideTexture = IMG_LoadTexture(renderer, "assets/characters/main_character/character_backside.png");
+        SDL_Texture *enemyBacksideTexture = IMG_LoadTexture(renderer, "assets/enemies/enemy_base_backside.png");
+        if (!backgroundTexture) {
+            fprintf(stderr, "Erreur lors du chargement de la texture du background : %s\n", IMG_GetError());
+        }
 
-    printf("\nCréation interface combat");
+        if (!characterBacksideTexture) {
+            fprintf(stderr, "Erreur lors du chargement de la texture du player : %s\n", IMG_GetError());
+        }
+
+        if (!enemyBacksideTexture) {
+            fprintf(stderr, "Erreur lors du chargement de la texture du enemy : %s\n", IMG_GetError());
+        }
+
+        // Définir la destination du background sur toute la fenêtre
+        SDL_Rect destBackground = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+        SDL_Rect destCharacter = {150, 420, 150, 150};
+        SDL_Rect destEnemy = {713, 100, 150, 150};
     
-    SDL_Texture *healthBarTexture = NULL;
-    SDL_Texture *attackButtonTexture = NULL;
 
-    createHealthBarTexture(renderer, &healthBarTexture);
-    createAttackButtonTexture(renderer, &attackButtonTexture);
-    
-    // Code pour organiser et dessiner l'interface de combat
-    // Utilisez SDL functions pour définir les positions relatives
-    // des textures et les dessiner sur le renderer
 
-    startCombat(character, enemy);
+        // Afficher le background
+        SDL_RenderCopy(renderer, backgroundTexture, NULL, &destBackground);
+        SDL_RenderCopy(renderer, characterBacksideTexture, NULL, &destCharacter);
+        SDL_RenderCopy(renderer, enemyBacksideTexture, NULL, &destEnemy);
+        // Libérer la texture du background
+        SDL_DestroyTexture(backgroundTexture);
+        SDL_DestroyTexture(characterBacksideTexture);
+        SDL_DestroyTexture(enemyBacksideTexture);
+        
+        // Code pour organiser et dessiner le reste de l'interface de combat
+        // ...
 
-    // Assurez-vous de libérer la mémoire des textures à la fin
-    SDL_DestroyTexture(healthBarTexture);
-    SDL_DestroyTexture(attackButtonTexture);
+        startCombat(character, enemy);
+
+        SDL_RenderPresent(renderer);  // Mettre à jour l'écran une seule fois à la fin de chaque itération
+
+    }
+
 }
 
+
+
 void createBackgroundTexture(SDL_Renderer *renderer, SDL_Texture **backgroundTexture) {
-    // Code pour créer la texture de la barre de santé
-    // Utilisez SDL functions pour dessiner la barre de santé
-    // Assurez-vous de libérer la mémoire appropriée à la fin
+
+
+
 }
 
 void createHealthBarTexture(SDL_Renderer *renderer, SDL_Texture **healthBarTexture) {

@@ -33,7 +33,7 @@ void initSDL() {
 void spawnEnemy() {
     size_t i = 0;
     for (i = 0; i <= 3; i++) {
-        Character *enemy = initCharacter("assets/ennemies/enemy_base.png", renderer, 0);
+        Character *enemy = initCharacter("assets/enemies/enemy_base.png", renderer, 0);
         addEnemy(*enemy);
         initCharacterPosition(&enemies[i], 64+i*2*64, 32+i*2*64);
         initCharacterSize(&enemies[i], 32+i*32, 32+i*32);
@@ -118,7 +118,6 @@ void mainLoop() {
         if (isInFight == 1) {
             //handleEvents();
             drawFightInterface(renderer, mainCharacter, enemyFighted);
-            isInFight = 0;
         } else {
             //handleEvents();
             handleMovements();

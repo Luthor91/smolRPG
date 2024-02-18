@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "character.h"
+#include "game.h"
 #include "spell.h"
 #include "fight.h"
 
