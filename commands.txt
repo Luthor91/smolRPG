@@ -24,3 +24,9 @@ sudo gcc -o main ./src/main.c ./src/game.c ./src/character.c ./src/characterMove
 
 PUSH GIT : 
 git add . && git commit -m "Tentative de fix" && git push
+
+DOCKER 
+
+docker build -t smolrpg .
+docker run --rm -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY --device=/dev/snd smolrpg
+
