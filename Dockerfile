@@ -1,19 +1,27 @@
-FROM gcc:latest
+FROM ubuntu:20.04
 
-# Prevent dialog prompts
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive 
 
-ENV XDG_RUNTIME_DIR=/tmp/runtime-root
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y \
+        build-essential \
+        cmake \
+        libsdl2-dev \
+        libsdl2-image-dev \
+        && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y \
-    libsdl2-dev \
-    libsdl2-image-dev \
-    libc6-dev \
-    build-essential
+# Set working directory
+WORKDIR /app
 
-COPY . /smolRPG
-WORKDIR /smolRPG
+# Copy source code
+COPY . .
 
-RUN gcc -o main ./src/main.c ./src/game.c ./src/character.c ./src/characterMovement.c ./src/obstacle.c  ./src/spell.c ./src/fight.c ./src/drawBackground.c ./src/fightDraw.c  ./src/functions.c -I ./header -I /usr/include/SDL2 -I /usr/include/SDL2_image -L /usr/lib/x86_64-linux-gnu -lSDL2 -lSDL2_image
+# Build the project
+RUN cmake -B build -S . && \
+    cmake --build build
 
-CMD ["./main"]
+# Run the project
+CMD ["/app/build/my_project"]
